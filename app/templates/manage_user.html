@@ -8,7 +8,7 @@
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
-                <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show" role="alert">
+                <div class="alert alert-{{ 'success' if category == 'success' else 'danger' if category == 'error' else 'warning' }} alert-dismissible fade show" role="alert">
                     {{ message }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
@@ -17,6 +17,15 @@
     {% endwith %}
 
     <h2 class="mt-4 text-purple">User Management</h2>
+    
+    <div class="mb-3">
+        <label for="viewTypeSelect" class="form-label">View:</label>
+        <select id="viewTypeSelect" class="form-select w-auto d-inline-block" onchange="window.location.href='{{ url_for('manage_user.manage') }}?view_type=' + this.value;">
+            <option value="pending" {% if view_type == 'pending' %}selected{% endif %}>Pending Requests</option>
+            <option value="approved" {% if view_type == 'approved' %}selected{% endif %}>Manage Users</option>
+        </select>
+    </div>
+
     <div class="table-responsive">
         <table class="table table-bordered table-sm">
             <thead class="table-light">
@@ -42,25 +51,42 @@
                             <td>{{ user.status }}</td>
                             <td>
                                 <div class="action-buttons">
-                                    <form method="POST" action="{{ url_for('manage_user.manage') }}" style="display: inline;">
-                                        <input type="hidden" name="user_id" value="{{ user._id }}">
-                                        <button type="submit" name="action" value="approve" class="btn btn-sm btn-success" title="Approve">
-                                            <i class="fa-solid fa-check"></i>
-                                        </button>
-                                    </form>
-                                    <form method="POST" action="{{ url_for('manage_user.manage') }}" style="display: inline;">
-                                        <input type="hidden" name="user_id" value="{{ user._id }}">
-                                        <button type="submit" name="action" value="deny" class="btn btn-sm btn-danger" title="Deny">
-                                            <i class="fa-solid fa-times"></i>
-                                        </button>
-                                    </form>
+                                    {% if view_type == 'pending' %}
+                                        <form method="POST" action="{{ url_for('manage_user.manage', view_type=view_type) }}" style="display: inline;">
+                                            <input type="hidden" name="user_id" value="{{ user._id }}">
+                                            <button type="submit" name="action" value="approve" class="btn btn-sm btn-success me-1" title="Approve">
+                                                <i class="fa-solid fa-check"></i>
+                                            </button>
+                                        </form>
+                                        <form method="POST" action="{{ url_for('manage_user.manage', view_type=view_type) }}" style="display: inline;">
+                                            <input type="hidden" name="user_id" value="{{ user._id }}">
+                                            <button type="submit" name="action" value="deny" class="btn btn-sm btn-danger me-1" title="Deny">
+                                                <i class="fa-solid fa-times"></i>
+                                            </button>
+                                        </form>
+                                    {% else %}
+                                        <form method="POST" action="{{ url_for('manage_user.manage', view_type=view_type) }}" style="display: inline;">
+                                            <input type="hidden" name="user_id" value="{{ user._id }}">
+                                            <button type="submit" name="action" value="delete" class="btn btn-sm btn-danger me-1" title="Delete">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+                                        <form method="POST" action="{{ url_for('manage_user.manage', view_type=view_type) }}" style="display: inline;">
+                                            <input type="hidden" name="user_id" value="{{ user._id }}">
+                                            <select name="action" class="form-select form-select-sm d-inline-block w-auto" onchange="this.form.submit();">
+                                                <option value="" selected disabled>Change Role</option>
+                                                <option value="role_admin">Admin</option>
+                                                <option value="role_user">User</option>
+                                            </select>
+                                        </form>
+                                    {% endif %}
                                 </div>
                             </td>
                         </tr>
                     {% endfor %}
                 {% else %}
                     <tr>
-                        <td colspan="7" class="text-center">No pending users found.</td>
+                        <td colspan="7" class="text-center">No {{ 'pending requests' if view_type == 'pending' else 'approved users' }} found.</td>
                     </tr>
                 {% endif %}
             </tbody>

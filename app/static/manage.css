@@ -86,3 +86,29 @@
 .alert {
     margin-bottom: 1rem;
 }
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.form-select-sm {
+    width: 120px;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+.alert {
+    margin-bottom: 1rem;
+}
+
+.table-responsive {
+    margin-top: 1rem;
+}
+
+.text-purple {
+    color: var(--dark-purple) !important;
+}
