@@ -1,0 +1,373 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='default.css')}}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<body>
+    
+    <main class="container-fluid">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <div class="d-flex align-items-center flex-wrap gap-3">
+            <div class="card shadow-sm p-3 mb-2 rounded bg-light-cream ">
+
+                <form method="POST" action="/Default_Inventory_Page" id="inventoryForm" enctype="multipart/form-data">
+                    <input type="hidden" name="edit_id" value="{{ edit_data._id if edit_data else '' }}">
+                      <div class="mb-3">
+                        <label for="departmentSchool" class="form-label">Depart/School</label>
+                        <select class="form-control" id="departmentSchool" name="departmentSchool" required onchange="toggleCustomDeptSchool(this)">
+                            <option value="">Select Depart/School or Type</option>
+                            <optgroup label="Departments">
+                                {% set departments = [
+                                    'Admissions', 'Admin Block', 'Accounts', 'Audit', 'Academic Offices',
+                                    'ODL', 'Procurement offices', 'Main Library', 'Main Stores', 'Security',
+                                    'Engineering', 'Hostels', 'Dean of Students offices', 'Chinese Computer Lab',
+                                    'Business Centre', 'Farm', 'Science Labs', 'Directorate of Postgraduate studies',
+                                    'DVC Research/Innovation', 'ICT Center', 'Water Works'
+                                ] %}
+                                {% for dept in departments %}
+                                    <option value="{{ dept }}" {% if edit_data and edit_data.department_school == dept %}selected{% endif %}>{{ dept }}</option>
+                                {% endfor %}
+                            </optgroup>
+                            <optgroup label="Schools">
+                                {% set schools = [
+                                    'School of Business Studies', 'School of Agriculture and Natural Resources',
+                                    'School of Education', 'School of Social Sciences',
+                                    'School of Natural and Applied Sciences', 'School of Engineering and Technology',
+                                    'School of Nursing and Midwifery (Town campus)', 'School of Medicine and Health Sciences (Livingstone Campus)'
+                                ] %}
+                                {% for school in schools %}
+                                    <option value="{{ school }}" {% if edit_data and edit_data.department_school == school %}selected{% endif %}>{{ school }}</option>
+                                {% endfor %}
+                            </optgroup>
+                            <option value="custom" {% if edit_data and edit_data.department_school not in departments and edit_data.department_school not in schools %}selected{% endif %}>Type Custom Depart/School</option>
+                        </select>
+                        <input type="text" class="form-control mt-2" id="customDepartmentSchool" name="customDepartmentSchool" 
+                               style="display: {% if edit_data and edit_data.department_school not in departments and edit_data.department_school not in schools %}block{% else %}none{% endif %};" 
+                               placeholder="Enter custom Depart/School"
+                               value="{% if edit_data and edit_data.department_school not in departments and edit_data.department_school not in schools %}{{ edit_data.department_school }}{% endif %}">
+                    </div>
+                    <input type="date" name="inventoryDate" id="inventoryDate" required value="{{ edit_data.inventory_date if edit_data else '' }}">
+                    <input type="hidden" id="inventoryData" name="inventoryData">
+                    <div class="table-responsive-lg mb-4 inventory-table-container"> 
+                        <table class="table table-bordered table-sm">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>No</th>
+                                    <th>USERNAME</th>
+                                    <th>POSITION</th>
+                                    <th>ICT EQUIPMENT</th>
+                                    <th>MODEL DETAILS</th>
+                                    <th>SERIAL NUMBER</th>
+                                    <th>STATUS</th>
+                                    <th>COMMENT</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventoryTable">
+                                {% if edit_data %}
+                                    {% for row in edit_data.rows %}
+                                        <tr>
+                                            <td>{{ loop.index }}</td>
+                                            <td><input type="text" class="form-control form-control-sm" name="username{{ loop.index }}" value="{{ row.username }}"></td>
+                                            <td><input type="text" class="form-control form-control-sm" name="position{{ loop.index }}" value="{{ row.position }}"></td>
+                                            <td>
+                                                <select class="form-control form-control-sm" name="ict_equipment{{ loop.index }}" onchange="toggleCustomICT(this, {{ loop.index }})" required>
+                                                    <option value="">Select ICT Equipment or Type</option>
+                                                    {% set ict_equipment = [
+                                                        'Monitor', 'CPU', 'Laptops', 'Printers', 'Photocopiers',
+                                                        'Scanners', 'Routers', 'switches', 'access points', 'Projector'
+                                                    ] %}
+                                                    {% for equip in ict_equipment %}
+                                                        <option value="{{ equip }}" {% if row.ict_equipment == equip %}selected{% endif %}>{{ equip }}</option>
+                                                    {% endfor %}
+                                                    <option value="custom" {% if row.ict_equipment and row.ict_equipment not in ict_equipment %}selected{% endif %}>Type Custom ICT Equipment</option>
+                                                </select>
+                                                <input type="text" class="form-control form-control-sm mt-1" id="customICT{{ loop.index }}" name="custom_ict_equipment{{ loop.index }}" value="{{ row.ict_equipment if row.ict_equipment not in ict_equipment else '' }}" style="display: {{ 'block' if row.ict_equipment and row.ict_equipment not in ict_equipment else 'none' }};" placeholder="Enter custom ICT Equipment">
+                                            </td>
+                                            <td><input type="text" class="form-control form-control-sm" name="model_details{{ loop.index }}" value="{{ row.model_details }}"></td>
+                                            <td><input type="text" class="form-control form-control-sm serial-number-input" name="serial_number{{ loop.index }}" value="{{ row.serial_number }}" data-row="{{ loop.index }}"></td>
+                                            <td>
+                                                <select class="form-control form-control-sm" name="status{{ loop.index }}" required>
+                                                    <option value="">Select</option>
+                                                    <option value="Working" {% if row.status == 'Working' %}selected{% endif %}>Working</option>
+                                                    <option value="Faulty" {% if row.status == 'Faulty' %}selected{% endif %}>Faulty</option>
+                                                    <option value="Absolute" {% if row.status == 'Absolute' %}selected{% endif %}>Absolute</option>
+                                                </select>
+                                            </td>
+                                            <td><input type="text" class="form-control form-control-sm" name="comment{{ loop.index }}" value="{{ row.comment }}"></td>
+                                            <td><button type="button" class="btn btn-sm remove-row" id="bin"><i class="fa-solid fa-trash-can"></i></button></td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td>1</td>
+                                        <td><input type="text" class="form-control form-control-sm" name="username1"></td>
+                                        <td><input type="text" class="form-control form-control-sm" name="position1"></td>
+                                        <td>
+                                            <select class="form-control form-control-sm" name="ict_equipment1" onchange="toggleCustomICT(this, 1)" required>
+                                                <option value="">Select ICT Equipment or Type</option>
+                                                {% set ict_equipment = [
+                                                    'Monitor', 'CPU', 'Laptops', 'Printers', 'Photocopiers',
+                                                    'Scanners', 'Routers', 'switches', 'access points', 'Projector'
+                                                ] %}
+                                                {% for equip in ict_equipment %}
+                                                    <option value="{{ equip }}">{{ equip }}</option>
+                                                {% endfor %}
+                                                <option value="custom">Type Custom ICT Equipment</option>
+                                            </select>
+                                            <input type="text" class="form-control form-control-sm mt-1" id="customICT1" name="custom_ict_equipment1" style="display: none;" placeholder="Enter custom ICT Equipment">
+                                        </td>
+                                        <td><input type="text" class="form-control form-control-sm" name="model_details1"></td>
+                                        <td><input type="text" class="form-control form-control-sm serial-number-input" name="serial_number1" data-row="1"></td>
+                                        <td>
+                                            <select class="form-control form-control-sm" name="status1" required>
+                                                <option value="">Select</option>
+                                                <option value="Working">Working</option>
+                                                <option value="Faulty">Faulty</option>
+                                                <option value="Absolute">Absolute</option>
+                                            </select>
+                                        </td>
+                                        <td><input type="text" class="form-control form-control-sm" name="comment1"></td>
+                                        <td><button type="button" class="btn btn-sm remove-row" id="bin"><i class="fa-solid fa-trash-can"></i></button></td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                        <button type="button" class="btn btn-outline-primary btn-sm mb-3" id="addRow">Add Row</button>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa-solid fa-floppy-disk"></i> Submit Inventory
+                        </button>
+                        <button type="button" class="btn btn-success" id="exportCsv">
+                            <i class="fa-solid fa-file-csv"></i> Export to CSV
+                        </button>
+                    </div>
+                    
+                    <input type="file" name="importCsv" id="importCsv" style="display: none;">
+                </form> 
+
+            </div>
+        </div>
+    </main>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Define functions globally
+    function toggleCustomDeptSchool(select) {
+        const customInput = $('#customDepartmentSchool');
+        if (select.value === 'custom') {
+            customInput.css('display', 'block');
+            customInput.prop('required', true);
+            customInput.focus();
+        } else {
+            customInput.css('display', 'none');
+            customInput.val('');
+            customInput.prop('required', false);
+        }
+        console.log('toggleCustomDeptSchool triggered, value:', select.value);
+    }
+
+    function toggleCustomICT(select, rowNum) {
+        const customInput = $(`#customICT${rowNum}`);
+        if (select.value === 'custom') {
+            customInput.css('display', 'block');
+            customInput.prop('required', true);
+            customInput.focus();
+        } else {
+            customInput.css('display', 'none');
+            customInput.val('');
+            customInput.prop('required', false);
+        }
+        console.log(`toggleCustomICT triggered for row ${rowNum}, value:`, select.value);
+    }
+
+    $(document).ready(function() {
+        let rowCount = {{ edit_data.rows|length if edit_data else 1 }};
+
+        $('#addRow').click(function() {
+            rowCount++;
+            const newRow = `
+                <tr>
+                    <td>${rowCount}</td>
+                    <td><input type="text" class="form-control form-control-sm" name="username${rowCount}"></td>
+                    <td><input type="text" class="form-control form-control-sm" name="position${rowCount}"></td>
+                    <td>
+                        <select class="form-control form-control-sm" name="ict_equipment${rowCount}" onchange="toggleCustomICT(this, ${rowCount})" required>
+                            <option value="">Select ICT Equipment or Type</option>
+                            {% set ict_equipment = [
+                                'Monitor', 'CPU', 'Laptops', 'Printers', 'Photocopiers',
+                                'Scanners', 'Routers', 'switches', 'access points', 'Projector'
+                            ] %}
+                            {% for equip in ict_equipment %}
+                                <option value="{{ equip }}">{{ equip }}</option>
+                            {% endfor %}
+                            <option value="custom">Type Custom ICT Equipment</option>
+                        </select>
+                        <input type="text" class="form-control form-control-sm mt-1" id="customICT${rowCount}" name="custom_ict_equipment${rowCount}" style="display: none;" placeholder="Enter custom ICT Equipment">
+                    </td>
+                    <td><input type="text" class="form-control form-control-sm" name="model_details${rowCount}"></td>
+                    <td><input type="text" class="form-control form-control-sm serial-number-input" name="serial_number${rowCount}" data-row="${rowCount}"></td>
+                    <td>
+                        <select class="form-control form-control-sm" name="status${rowCount}" required>
+                            <option value="">Select</option>
+                            <option value="Working">Working</option>
+                            <option value="Faulty">Faulty</option>
+                            <option value="Absolute">Absolute</option>
+                        </select>
+                    </td>
+                    <td><input type="text" class="form-control form-control-sm" name="comment${rowCount}"></td>
+                    <td><button type="button" class="btn btn-sm remove-row" id="bin"><i class="fa-solid fa-trash-can"></i></button></td>
+                </tr>
+            `;
+            $('#inventoryTable').append(newRow);
+            setupSerialNumberCheck(rowCount); // Initialize serial number check for new row
+        });
+
+        $(document).on('click', '.remove-row', function() {
+            if ($('#inventoryTable tr').length > 1) {
+                $(this).closest('tr').remove();
+                updateRowNumbers();
+                rowCount--;
+            }
+        });
+
+        function updateRowNumbers() {
+            $('#inventoryTable tr').each(function(index) {
+                $(this).find('td:first').text(index + 1);
+            });
+        }
+
+        // Initialize serial number checks for existing rows
+        $('.serial-number-input').each(function() {
+            setupSerialNumberCheck($(this).data('row'));
+        });
+
+        function setupSerialNumberCheck(rowNum) {
+            const $input = $(`input[name="serial_number${rowNum}"]`);
+            $input.on('input', function() {
+                const serialNumber = $(this).val().trim();
+                if (serialNumber.length > 2) { // Avoid checking on every keystroke
+                    $.ajax({
+                        url: '/check_serial_number',
+                        type: 'POST',
+                        data: { serial_number: serialNumber },
+                        success: function(response) {
+                            $input.next('.valid-feedback, .invalid-feedback').remove(); // Remove previous feedback
+                            if (response.exists) {
+                                $input.addClass('is-invalid').removeClass('is-valid');
+                                $input.after(`<div class="invalid-feedback">${response.message}</div>`);
+                            } else {
+                                $input.addClass('is-valid').removeClass('is-invalid');
+                                $input.after(`<div class="valid-feedback">${response.message}</div>`);
+                            }
+                        },
+                        error: function() {
+                            $input.removeClass('is-valid is-invalid');
+                            $input.next('.valid-feedback, .invalid-feedback').remove();
+                        }
+                    });
+                } else {
+                    $input.removeClass('is-valid is-invalid');
+                    $input.next('.valid-feedback, .invalid-feedback').remove();
+                }
+            });
+        }
+
+        $('#inventoryForm').on('submit', function(e) {
+            e.preventDefault();
+            let inventoryData = [];
+            const inventoryDate = $('#inventoryDate').val();
+            const departmentSchool = $('#departmentSchool').val() === 'custom' ? $('#customDepartmentSchool').val() : $('#departmentSchool').val();
+            $('#inventoryTable tr').each(function(index) {
+                const rowNum = index + 1;
+                const rowData = {
+                    username: $(`input[name="username${rowNum}"]`).val() || '',
+                    position: $(`input[name="position${rowNum}"]`).val() || '',
+                    ict_equipment: $(`select[name="ict_equipment${rowNum}"]`).val() === 'custom' ? $(`input[name="custom_ict_equipment${rowNum}"]`).val() || '' : $(`select[name="ict_equipment${rowNum}"]`).val() || '',
+                    model_details: $(`input[name="model_details${rowNum}"]`).val() || '',
+                    serial_number: $(`input[name="serial_number${rowNum}"]`).val() || '',
+                    status: $(`select[name="status${rowNum}"]`).val() || '',
+                    comment: $(`input[name="comment${rowNum}"]`).val() || ''
+                };
+                inventoryData.push(rowData);
+            });
+
+            $('#inventoryData').val(JSON.stringify({
+                inventory_date: inventoryDate,
+                department_school: departmentSchool,
+                rows: inventoryData
+            }));
+            let isValid = true;
+            if (!inventoryDate) {
+                alert('Please select an inventory date.');
+                $('#inventoryDate').focus();
+                isValid = false;
+            }
+            if (!departmentSchool) {
+                alert('Please select or enter a Depart/School.');
+                $('#departmentSchool').focus();
+                isValid = false;
+            }
+            inventoryData.forEach((row, index) => {
+                const rowNum = index + 1;
+                if (!row.username.trim() || !row.ict_equipment.trim() || !row.serial_number.trim() || !row.status.trim()) {
+                    alert(`Please fill in all required fields (Username, ICT Equipment, Serial Number, Status) for row ${rowNum}.`);
+                    isValid = false;
+                    return false;
+                }
+            });
+            if (isValid) {
+                this.submit();
+            }
+        });
+
+        $('#exportCsv').click(function() {
+            let csv = [];
+            const headers = ['NO', 'USERNAME', 'POSITION', 'ICT EQUIPMENT', 'MODEL DETAILS', 'SERIAL NUMBER', 'STATUS', 'COMMENT'];
+            csv.push(headers.join(','));
+
+            $('#inventoryTable tr').each(function(index) {
+                const rowNum = index + 1;
+                const row = [
+                    rowNum,
+                    $(`input[name="username${rowNum}"]`).val() || '',
+                    $(`input[name="position${rowNum}"]`).val() || '',
+                    $(`select[name="ict_equipment${rowNum}"]`).val() === 'custom' ? $(`input[name="custom_ict_equipment${rowNum}"]`).val() : $(`select[name="ict_equipment${rowNum}"]`).val() || '',
+                    $(`input[name="model_details${rowNum}"]`).val() || '',
+                    $(`input[name="serial_number${rowNum}"]`).val() || '',
+                    $(`select[name="status${rowNum}"]`).val() || '',
+                    $(`input[name="comment${rowNum}"]`).val() || ''
+                ];
+                csv.push(row.join(','));
+            });
+
+            const csvContent = 'data:text/csv;charset=utf-8,' + csv.join('\n');
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement('a');
+            link.setAttribute('href', encodedUri);
+            link.setAttribute('download', 'inventory_' + new Date().toISOString().slice(0, 10) + '.csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    });
+</script>
+
+</body>
+
+{% endblock %}

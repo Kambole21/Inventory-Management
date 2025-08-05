@@ -1,0 +1,64 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='view_stats.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<main class="container-fluid py-4">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <h2 class="text-center mb-4 text-purple">{{ entity }}</h2>
+
+    <div class="card shadow-sm mb-4 bg-light-cream">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-sm">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Username</th>
+                            <th>Position</th>
+                            <th>Working</th>
+                            <th>Faulty</th>
+                            <th>Absolute</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if stats %}
+                            {% for item in stats | groupby('_id.username') %}
+                                {% set username = item.grouper %}
+                                {% set user_stats = stats | selectattr('_id.username', 'equalto', username) | list %}
+                                <tr>
+                                    <td>{{ username or 'N/A' }}</td>
+                                    <td>{{ user_stats[0]._id.position or 'N/A' }}</td>
+                                    <td>{{ user_stats | selectattr('_id.status', 'equalto', 'Working') | map(attribute='count') | sum or 0 }}</td>
+                                    <td>{{ user_stats | selectattr('_id.status', 'equalto', 'Faulty') | map(attribute='count') | sum or 0 }}</td>
+                                    <td>{{ user_stats | selectattr('_id.status', 'equalto', 'Absolute') | map(attribute='count') | sum or 0 }}</td>
+                                    <td>{{ user_stats | map(attribute='count') | sum }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center">No data available</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</script>
+{% endblock %}

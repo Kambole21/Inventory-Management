@@ -1,0 +1,155 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='home.css')}}">
+
+<main class="container-fluid py-4">
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <p><h3 class="mt-4 text-purple" id="mu">Mulungushi University</h3>
+        <br><h1 class="mt-4 text-purple">ICT Inventory Management</h1> </p>
+    
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3 mb-2 rounded bg-light-cream">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-box fa-2x text-purple me-3"></i>
+                    <div>
+                        <div class="h5 mb-0">{{ stats.get('total', 0) }}</div>
+                        <small>Total Equipments</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3 mb-2 rounded bg-light-cream">
+                <div class="d-flex align-items-center">
+                    <i class="fa-solid fa-gears fa-2x text-purple me-3"></i>
+                    <div>
+                        <div class="h5 mb-0">{{ stats.get('Working', 0) }}</div>
+                        <small>Working Equipment</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3 mb-2 rounded bg-light-cream">
+                <div class="d-flex align-items-center">
+                    <i class="fa-solid fa-shield-virus fa-2x text-purple me-3"></i>
+                    <div>
+                        <div class="h5 mb-0">{{ stats.get('Faulty', 0) }}</div>
+                        <small>Faulty Equipment</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3 mb-2 rounded bg-light-cream">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-exclamation-triangle fa-2x text-danger me-3"></i>
+                    <div>
+                        <div class="h5 mb-0 text-danger">{{ stats.get('Absolute', 0) }}</div>
+                        <small class="text-danger">Absolute Equipment</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card shadow-sm mb-4 bg-light-cream">
+                <div class="card-body">
+                    <h5 class="card-title text-purple">Number of Inventories Submitted</h5>
+                    <div class="d-flex align-items-center">
+                        <i class="fa-solid fa-house-laptop fa-3x text-purple me-3"></i>
+                        <div>
+                            <div class="h3 mb-0">{{ inventories_count }}</div>
+                            <small>Total Inventories</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4 bg-light-cream">
+                <div class="card-body">
+                    <h5 class="card-title text-purple">Inventory Values</h5>
+                    <div class="d-flex align-items-center justify-content-around">
+                        <div class="position-relative d-inline-flex align-items-center justify-content-center" style="width: 120px; height: 120px;">
+                            <div class="progress-circle" data-percent="{{ (stats.get('Working', 0) / stats.get('total', 1) * 100)|round(0) if stats.get('total', 0) > 0 else 0 }}">
+                                <svg class="progress-ring" width="120" height="120">
+                                    <circle class="progress-ring-track" stroke="#DFB6B2" stroke-width="10" fill="transparent" r="50" cx="60" cy="60"/>
+                                    <circle class="progress-ring-progress" stroke="#854F6C" stroke-width="10" fill="transparent" r="50" cx="60" cy="60" style="stroke-dasharray: 314; stroke-dashoffset: {{ 314 - (314 * (stats.get('Working', 0) / stats.get('total', 1)))|round(2) if stats.get('total', 0) > 0 else 314 }};"/>
+                                </svg>
+                                <div class="position-absolute h4 mb-0 text-purple">{{ (stats.get('Working', 0) / stats.get('total', 1) * 100)|round(0) if stats.get('total', 0) > 0 else 0 }}%</div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="color-box bg-working me-2"></span> <span class="text-working">Working</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="color-box bg-faulty me-2" ></span> <span class="text-faulty">Faulty/Absolute</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm mb-4 bg-light-cream user-info-card">
+                <div class="icon-container">
+                    <i class="fas fa-user-circle"></i> </div>
+                <div class="details">
+                    {% if user_data %}
+                        <p class="user-name">{{ user_data.fname }} {{ user_data.lname }}</p>
+                        <p class="user-role">{{ user_data.role }}</p>
+                    {% else %}
+                        <p class="user-name text-muted">Guest User</p>
+                        <p class="user-role text-muted">Not logged in</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card shadow-sm mb-4 bg-light-cream">
+                <div class="card-body">
+                    <h5 class="card-title text-purple">Equipments</h5>
+                    <ul class="list-group list-group-flush">
+                        {% for equipment in equipment_list %}
+                            <li class="list-group-item bg-light-cream d-flex justify-content-between align-items-center">
+                                {{ equipment._id or 'Unknown' }} <span class="badge bg-purple rounded-pill">{{ equipment.count }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            {% if user_data.role == 'admin' %} 
+
+            <div class="card shadow-sm mb-4 bg-light-cream">
+                <a href="{{url_for('manage_user.manage')}}" id="manage">
+                    <div class="card-body">
+                        <i class="fa-solid fa-users fa-3x text-purple me-3"></i>
+                        <h5 class="card-title text-purple">User Management</h5>
+                    </div>
+                </a>
+            </div>
+
+            {% endif %}
+
+        </div>
+    </div>
+</main>
+
+{% endblock %}

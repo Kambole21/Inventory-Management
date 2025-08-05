@@ -1,0 +1,55 @@
+.container-fluid {
+    padding: 1rem;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    background-color: #DEDCDC;
+    font-size: 0.875rem;
+}
+
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table td, .table th {
+    padding: 0.5rem;
+    vertical-align: middle;
+    border-top: 1px solid #dee2e6;
+    text-align: center;
+}
+
+.card {
+    border: none;
+    border-radius: 0.25rem;
+}
+
+.card-body {
+    padding: 1.25rem;
+}
+
+.bg-light-cream {
+    background-color: #f8f9fa !important;
+}
+
+.text-purple {
+    color: #638ECB !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem;
+}
+
+.alert {
+    margin-bottom: 1rem;
+}

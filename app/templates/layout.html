@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{url_for('static', filename='layout.css')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="d-flex" id="wrapper">
+        <div class="bg-dark-purple border-right" id="sidebar-wrapper">
+            <div class="sidebar-heading text-white text-center py-4">Menu</div>
+            <div class="list-group list-group-flush">
+                <a href="{{url_for('home.home')}}" class="list-group-item list-group-item-action bg-dark-purple text-white active">
+                    <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                </a>
+                <a href="{{url_for('inventory.inventory')}}" class="list-group-item list-group-item-action bg-dark-purple text-white">
+                    <i class="fas fa-box me-2"></i> Inventory
+                </a>
+                <a href="{{url_for('recent.recent')}}" class="list-group-item list-group-item-action bg-dark-purple text-white">
+                    <i class="fa-solid fa-clock me-2"></i> Recent Inventories
+                </a>
+                <a href="{{url_for('my_files.files')}}" class="list-group-item list-group-item-action bg-dark-purple text-white">
+                    <i class="fa-solid fa-file me-2"></i> My Files
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-dark-purple text-white">
+                    <i class="fa-solid fa-scroll me-2"></i>Tutorials
+                </a>
+                {% if user_data.role == 'admin' %}
+                <a href="{{url_for('stats.stats')}}" class="list-group-item list-group-item-action bg-dark-purple text-white">
+                    <i class="fa-solid fa-chart-gantt me-2"></i>Stats
+                </a>
+                <a href="{{url_for('manage_user.manage')}}" class="list-group-item list-group-item-action bg-dark-purple text-white">
+                    <i class="fa-solid fa-users me-2"></i> User Management
+                </a>
+                {% endif %}
+            </div>
+            <div class="list-group list-group-flush logout-section">
+                <a href="{{url_for('login.log')}}" class="list-group-item list-group-item-action bg-dark-purple text-white">
+                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                </a>
+            </div>
+        </div>
+        <div id="page-content-wrapper">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light-pink" id="navbar">
+                <div class="container-fluid">
+                    <button class="btn btn-primary" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
+                            <li class="nav-item">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        var el = document.getElementById("wrapper");
+        var toggleButton = document.getElementById("sidebarToggle");
+        var navbar = document.getElementById("navbar");
+
+        // Function to update sidebar state based on screen width
+        function updateSidebarState() {
+            if (window.innerWidth >= 768) {
+                el.classList.remove("toggled"); // Show sidebar on desktop
+                toggleButton.style.display = "block";
+                navbar.style.zIndex = "1001"; // Navbar above sidebar on desktop
+                document.getElementById("sidebar-wrapper").style.zIndex = "1000";
+            } else {
+                el.classList.add("toggled"); // Hide sidebar on mobile by default
+                toggleButton.style.display = "block";
+                navbar.style.zIndex = "1001"; // Navbar above sidebar on mobile
+                document.getElementById("sidebar-wrapper").style.zIndex = "900"; // Sidebar below navbar
+            }
+        }
+
+        // Initial call and event listener for resize
+        updateSidebarState();
+        window.addEventListener("resize", updateSidebarState);
+
+        // Toggle sidebar on button click
+        toggleButton.onclick = function () {
+            el.classList.toggle("toggled");
+            if (window.innerWidth < 768 && !el.classList.contains("toggled")) {
+                navbar.style.zIndex = "900"; // Lower navbar z-index when sidebar is visible on mobile
+                document.getElementById("sidebar-wrapper").style.zIndex = "1001"; // Raise sidebar above navbar
+            } else {
+                navbar.style.zIndex = "1001"; // Restore navbar above sidebar
+                document.getElementById("sidebar-wrapper").style.zIndex = "900";
+            }
+        };
+    </script>
+</body>
+</html>

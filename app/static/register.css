@@ -1,0 +1,64 @@
+body {
+    background-color: #f8f9fa;
+    color: #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.register-card {
+    background: white;
+    border-radius: 1rem;
+    border: 1px solid #e0e0e0;
+}
+
+legend {
+    color: #638ECB;
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.form-label {
+    color: #638ECB;
+    font-weight: 500;
+}
+
+.form-control {
+    border-color: #638ECB;
+    border-radius: 0.4rem;
+}
+
+.form-control:focus {
+    border-color: #638ECB;
+    box-shadow: 0 0 0 0.2rem rgba(99, 142, 203, 0.25);
+}
+
+.btn-primary {
+    background-color: #638ECB;
+    border-color: #638ECB;
+}
+
+.btn-primary:hover {
+    background-color: #5279b0;
+    border-color: #5279b0;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+.alert-dismissible .btn-close {
+    color: #638ECB;
+}
+#log{
+    text-decoration: none;
+    font-weight: 700;
+    color: #638ECB; 
+}

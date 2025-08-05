@@ -1,0 +1,143 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='inventory.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<main class="container-fluid py-4">
+  <div class="d-flex justify-content-center flex-wrap gap-3">
+
+    <div class="card shadow-sm p-3 mb-2 rounded bg-light-cream" style="width: 18rem;">
+      <div class="card-title">Start New Inventory</div>
+      <div class="card-body d-flex align-items-center">
+        <a href="{{url_for('default_inventory.default')}}"><i class="fa-solid fa-plus fa-2x text-purple me-3"></i></a>
+      </div>
+    </div>
+
+    <div class="card shadow-sm p-3 mb-2 rounded bg-light-cream" style="width: 18rem;">
+      <div class="card-title">Customize Inventory</div>
+      <div class="card-body d-flex align-items-center">
+        <a href="#"><i class="fa-solid fa-screwdriver-wrench fa-2x text-purple me-3"></i></a>
+      </div>
+    </div>
+
+    <div class="card shadow-sm p-3 mb-2 rounded bg-light-cream" style="width: 18rem;">
+      <div class="card-title">Upload Inventory</div>
+      <div class="card-body d-flex align-items-center">
+        <a href="#" data-bs-toggle="modal" data-bs-target="#uploadModal"><i class="fa-solid fa-upload fa-2x text-purple me-3"></i></a>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- Upload Modal -->
+<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="uploadModalLabel">Upload Inventory</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="drop-zone" id="dropZone">
+          <i class="fa-solid fa-cloud-upload-alt fa-3x"></i>
+          <p>Drag and drop your CSV file here or <span class="file-input-label">choose a file</span></p>
+          <input type="file" id="fileInput" accept=".csv" style="display: none;">
+        </div>
+        <div id="preview" class="mt-3"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closebtn">Close</button>
+        <button type="button" class="btn btn-primary" id="uploadButton" disabled>Upload</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  $(document).ready(function() {
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const uploadButton = document.getElementById('uploadButton');
+    let file;
+
+    // Trigger file input when label is clicked
+    $('.file-input-label').on('click', function(e) {
+      e.preventDefault();
+      fileInput.click();
+    });
+
+    // Handle drag and drop
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      file = e.dataTransfer.files[0];
+      if (file && file.name.endsWith('.csv')) {
+        previewFile(file);
+        uploadButton.disabled = false;
+      } else {
+        alert('Please upload a valid CSV file.');
+        uploadButton.disabled = true;
+      }
+    });
+
+    // Handle file input change
+    fileInput.addEventListener('change', (e) => {
+      file = e.target.files[0];
+      if (file && file.name.endsWith('.csv')) {
+        previewFile(file);
+        uploadButton.disabled = false;
+      } else {
+        alert('Please upload a valid CSV file.');
+        uploadButton.disabled = true;
+      }
+    });
+
+    // Preview file content
+    function previewFile(file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const text = e.target.result;
+        const preview = document.getElementById('preview');
+        preview.innerHTML = `<pre>${text.substring(0, 500)}</pre>`; // Show first 500 characters
+      };
+      reader.readAsText(file);
+    }
+
+    // Handle upload
+    uploadButton.addEventListener('click', () => {
+      if (file) {
+        const formData = new FormData();
+        formData.append('importCsv', file);
+        $.ajax({
+          url: '{{ url_for("default_inventory.default") }}',
+          type: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function(response) {
+            $('#uploadModal').modal('hide');
+            window.location.href = '{{ url_for("recent.recent") }}';
+          },
+          error: function(xhr, status, error) {
+            alert('Upload failed: ' + error);
+          }
+        });
+      }
+    });
+  });
+</script>
+
+{% endblock %}

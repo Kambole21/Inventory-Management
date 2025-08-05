@@ -1,0 +1,48 @@
+.bg-light-cream {
+  background-color: #fefae0;
+}
+
+.text-purple {
+  color: #6f42c1;
+}
+
+.drop-zone {
+  border: 2px dashed #6f42c1;
+  padding: 2rem;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  border-color: #638ECB;
+}
+
+.drop-zone.dragover {
+  background-color: #e9ecef;
+  border-color: #638ECB;
+}
+
+.drop-zone i {
+  color: #638ECB;
+}
+
+.file-input-label {
+  color: #638ECB;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+#preview pre {
+  white-space: pre-wrap;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+}
+#closebtn{
+  color: #cb7777;
+}
+#uploadButton{
+  color: #0d6efd;
+}

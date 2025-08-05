@@ -1,0 +1,88 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='my_files.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<main class="container-fluid py-4">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <h2 class="mt-4 text-purple">My Files</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-sm">
+            <thead class="table-light">
+                <tr>
+                    <th>Inventory Date</th>
+                    <th>Department/School</th>
+                    <th>Created By</th>
+                    <th>Items</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if inventories %}
+                    {% for inventory in inventories %}
+                        <tr>
+                            <td>{{ inventory.inventory_date }}</td>
+                            <td>{{ inventory.department_school or 'N/A' }}</td>
+                            <td>{{ inventory.created_by }}</td>
+                            <td>{{ inventory.rows|length }}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="{{ url_for('my_files.view_my_file', inventory_id=inventory._id) }}" class="btn btn-sm btn-info" title="View">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                    {% if inventory.is_uploaded %}
+                                        <form method="POST" action="{{ url_for('my_files.submit_my_file', inventory_id=inventory._id) }}" style="display: inline;">
+                                            <button type="submit" class="btn btn-sm btn-success" title="Submit to Recent">
+                                                <i class="fa-solid fa-floppy-disk"></i>
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                    <form method="POST" action="{{ url_for('my_files.delete_my_file', inventory_id=inventory._id) }}" style="display: inline;">
+                                        <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center">No inventories found.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Debug form submissions
+        $('form').on('submit', function(e) {
+            console.log('Form submitted to:', $(this).attr('action'));
+            const formData = $(this).serialize();
+            console.log('Form data:', formData);
+        });
+
+        // Prevent default on View link for debugging (optional)
+        $('.btn-info').on('click', function(e) {
+            console.log('View clicked for:', $(this).find('a').attr('href'));
+        });
+    });
+</script>
+</script>
+{% endblock %}

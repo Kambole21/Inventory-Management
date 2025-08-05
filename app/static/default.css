@@ -1,0 +1,366 @@
+.main-content {
+    padding: 1rem;
+}
+
+.card {
+    background: #DEDCDC; /* Card background */
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.caption-wrapper {
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.table-responsive-lg {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    background-color: #DEDCDC; /* Set table background to #DEDCDC */
+    font-size: 0.875rem;
+}
+
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table td, .table th {
+    padding: 0.5rem;
+    vertical-align: middle;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Remove borders for inputs inside table */
+.table input.form-control {
+    border: none;
+    border-radius: 0;
+    padding: 0.25rem;
+    font-size: 0.875rem;
+    background-color: transparent;
+    box-shadow: none;
+    width: 100%; /* Ensure full width within td */
+}
+
+/* Style for serial number input feedback */
+.serial-number-input {
+    position: relative;
+    padding-bottom: 0.25rem; /* Space for feedback */
+}
+
+.serial-number-input.is-valid {
+    border-bottom: 2px solid #28a745; /* Green for valid */
+}
+
+.serial-number-input.is-invalid {
+    border-bottom: 2px solid #dc3545; /* Red for invalid */
+}
+
+.valid-feedback, .invalid-feedback {
+    display: block; /* Ensure block-level to avoid overlap */
+    font-size: 0.75rem;
+    margin-top: 0.25rem; /* Space above feedback */
+    padding-left: 0.5rem; /* Align with input */
+    color: inherit; /* Inherit color from parent class */
+    font-family: inherit; /* Ensure text-only */
+    background: none; /* Remove any background that might imply icons */
+}
+
+.valid-feedback {
+    color: #28a745; /* Green for valid message */
+}
+
+.invalid-feedback {
+    color: #dc3545; /* Red for invalid message */
+}
+
+/* Explicitly hide any icon elements */
+.valid-feedback::before,
+.invalid-feedback::before,
+.valid-feedback::after,
+.invalid-feedback::after {
+    content: none; /* Remove any pseudo-element icons */
+}
+
+/* Ensure feedback doesn’t break table layout */
+.table td {
+    position: relative; /* Allow positioning of feedback */
+}
+
+/* Hide default Bootstrap feedback arrows */
+.invalid-feedback::before,
+.valid-feedback::before {
+    display: none;
+}
+
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.btn-primary {
+    color: #638ECB; /* Set button text color */
+    background-color: #0d6efd; /* Base background for primary button */
+    border-color: #0d6efd; /* Base border color for primary button */
+}
+
+.btn-primary:hover {
+    color: #1A2D42; /* Hover text color */
+    background-color: #0b5ed7; /* Hover background color */
+    border-color: #638ECB; /* Hover border color */
+}
+
+.btn-outline-primary {
+    color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-outline-primary:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.btn-success {
+    color: #198754;
+    background-color: #28a745;
+    border-color: #28a745;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+    color: #49c18a;
+}
+
+.btn-danger {
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    border-color: #c82333;
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #333;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.justify-content-end {
+    justify-content: flex-end;
+}
+
+.mb-3 {
+    margin-bottom: 1rem;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem;
+}
+
+.p-4 {
+    padding: 1.5rem;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-muted {
+    color: #6c757d;
+}
+
+.fw-bold {
+    font-weight: 700;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .main-content {
+        padding: 1rem;
+    }
+    .table {
+        font-size: 0.75rem;
+    }
+    .table input.form-control {
+        padding: 0.2rem;
+        font-size: 0.75rem;
+    }
+    .row.mb-4 .col-md-6 {
+        margin-bottom: 1rem;
+    }
+    .tables-container {
+        flex-direction: column !important;
+    }
+}
+
+@media (max-width: 500px) {
+    .table th, .table td {
+        padding: 0.5rem;
+    }
+    .form-label {
+        font-size: 0.875rem;
+    }
+}
+
+/* Center the heading */
+.intro {
+    text-align: center;
+    margin: 0 auto;
+}
+
+/* Underline style for inputs outside the table */
+input.form-control:not(.table input) {
+    border: none;
+    border-bottom: 1px solid #ced4da;
+    border-radius: 0;
+    background-color: transparent;
+    box-shadow: none;
+}
+
+/* Green focus effect for better UX */
+input.form-control:focus {
+    border-bottom: 2px solid #4caf50;
+    outline: none;
+    box-shadow: none;
+}
+
+/* Style for the tables container */
+.tables-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 2rem;
+}
+
+.tables-container .table-responsive {
+    flex: 1;
+    width: 50%;
+}
+
+/* Ensure tables stack on smaller screens */
+@media (max-width: 768px) {
+    .tables-container .table-responsive {
+        width: 100%;
+    }
+}
+
+/* Centered table styling */
+#infotable {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Styling for the legend */
+legend {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 0.5rem;
+}
+
+/* Styling for the date input */
+input[type="date"] {
+    padding: 0.5rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    font-size: 0.9rem;
+    margin-bottom: 1rem; /* Add some space below the date input */
+}
+
+input[type="date"]:focus {
+    border-color: #4caf50;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+}
+
+/* Specific styling for the submit button */
+button[type="submit"].btn-primary {
+    color: #638ECB;
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+button[type="submit"].btn-primary:hover {
+    color: #1A2D42;
+    background-color: #0b5ed7;
+    border-color: #638ECB;
+}
+
+/* Specific styling for the "Add Row" button */
+button#addRow.btn-outline-primary {
+    color: #007bff; /* Keeps the standard Bootstrap blue for outline */
+    border-color: #007bff;
+}
+
+button#addRow.btn-outline-primary:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+#bin {
+    color: red;
+    background-color: black;
+}
+
+/* Styling for the CSV export button */
+.btn-success {
+    color: #198754;
+    background-color: #28a745;
+    border-color: #28a745;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+    color: #49c18a;
+}

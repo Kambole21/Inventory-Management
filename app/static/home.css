@@ -1,0 +1,203 @@
+:root {
+    --light-cream: #f8f9fa;
+    --light-red: #6D2932;
+    --dark-purple: #638ECB;
+    --dark-green: #140c30;
+    --mid-green: #153d4c;
+    --light-green: #156f69;
+}
+
+body {
+    overflow-x: hidden;
+    background-color: var(--light-cream);
+}
+
+#wrapper {
+    display: flex;
+}
+
+#sidebar-wrapper {
+    min-height: 100vh;
+    margin-left: -15rem;
+    transition: margin .25s ease-out;
+    background-color: var(--dark-purple);
+    width: 15rem;
+    flex-shrink: 0;
+}
+
+#sidebar-wrapper .sidebar-heading {
+    padding: 0.875rem 1.25rem;
+    font-size: 1.2rem;
+}
+
+#sidebar-wrapper .list-group {
+    width: 15rem;
+}
+
+#sidebar-wrapper .list-group-item {
+    color: white;
+    border: none;
+    padding: 1rem 1.25rem;
+    transition: background-color 0.3s ease;
+}
+
+#sidebar-wrapper .list-group-item.active,
+#sidebar-wrapper .list-group-item:hover {
+    background-color: var(--light-red);
+    color: white;
+}
+
+#page-content-wrapper {
+    min-width: 0;
+    width: 100%;
+    flex-grow: 1;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+    margin-left: 0;
+}
+
+.bg-dark-purple {
+    background-color: var(--dark-purple) !important;
+}
+
+.bg-light-cream {
+    background-color: var(--light-cream) !important;
+}
+
+.bg-light-red {
+    background-color: var(--light-red) !important;
+}
+
+.text-purple {
+    color: var(--dark-purple) !important;
+}
+
+.color-box {
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    border-radius: 3px;
+}
+
+.logout-section {
+    margin-top: auto;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Progress Circle for Inventory Values */
+.progress-circle {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.progress-ring-track {
+    stroke: var(--light-red);
+}
+
+.progress-ring-progress {
+    stroke: var(--dark-purple);
+    transition: stroke-dashoffset 0.35s;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+}
+
+@media (min-width: 768px) {
+    #sidebar-wrapper {
+        margin-left: 0;
+    }
+
+    #page-content-wrapper {
+        min-width: 0;
+        width: 100%;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        margin-left: -15rem;
+    }
+}
+
+#bin {
+    color: red;
+    background-color: black;
+}
+
+.user-info-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: linear-gradient(135deg, var(--light-cream) 0%, #e9ecef 100%);
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    width: 100%;
+    max-width: 360px;
+    height: 150px;
+    border: 1px solid #ced4da;
+    font-family: Arial, sans-serif;
+    color: var(--dark-green);
+    height: 150px;
+}
+
+.user-info-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+.user-info-card .icon-container {
+    flex-shrink: 0;
+    font-size: 2.5rem;
+    color: var(--dark-purple);
+}
+
+.user-info-card .details {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.user-info-card .user-name {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 0.2rem;
+    color: var(--dark-green);
+}
+
+.user-info-card .user-role {
+    font-size: 0.9rem;
+    color: var(--mid-green);
+}
+
+#manage {
+    text-decoration: none;
+}
+
+#mu {
+    margin-bottom: -3.5rem;
+    font-weight: 650;
+}
+
+h1 {
+    margin-top: 10px;
+}
+.badge{
+    color: black;
+}
+.bg-working {
+    background-color: #638ECB;
+    color: white;
+}
+
+.bg-faulty {
+    background-color:#6D2932;
+    color: white;
+}
+
+

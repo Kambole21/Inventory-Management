@@ -1,0 +1,109 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='default.css')}}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<body>
+    
+    <main class="container-fluid">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="d-flex align-items-center flex-wrap gap-3">
+            <div class="card shadow-sm p-3 mb-2 rounded bg-light-cream ">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Depart/School</label>
+                        <input type="text" class="form-control" value="{{ inventory_data.department_school }}" disabled>
+                    </div>
+                    <input type="date" name="inventoryDate" id="inventoryDate" value="{{ inventory_data.inventory_date }}" disabled>
+                    <input type="hidden" id="inventoryData" name="inventoryData" value="{{ inventory_data|safe }}">
+                    <div class="table-responsive-lg mb-4 inventory-table-container"> 
+                        <table class="table table-bordered table-sm">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>No</th>
+                                    <th>USERNAME</th>
+                                    <th>POSITION</th>
+                                    <th>ICT EQUIPMENT</th>
+                                    <th>MODEL DETAILS</th>
+                                    <th>SERIAL NUMBER</th>
+                                    <th>STATUS</th>
+                                    <th>COMMENT</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in inventory_data.rows %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ row.username }}</td>
+                                        <td>{{ row.position }}</td>
+                                        <td>{{ row.ict_equipment }}</td>
+                                        <td>{{ row.model_details }}</td>
+                                        <td>{{ row.serial_number }}</td>
+                                        <td>{{ row.status }}</td>
+                                        <td>{{ row.comment }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </form> 
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-success" id="exportCsv">
+                        <i class="fa-solid fa-file-csv"></i> Export to CSV
+                    </button>
+                    <a href="{{ url_for('default_inventory.default') }}?edit={{ inventory_data._id }}" class="btn btn-warning">
+                        <i class="fa-solid fa-edit"></i> Edit
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#exportCsv').click(function() {
+            let csv = [];
+            const headers = ['NO', 'USERNAME', 'POSITION', 'ICT EQUIPMENT', 'MODEL DETAILS', 'SERIAL NUMBER', 'STATUS', 'COMMENT'];
+            csv.push(headers.join(','));
+
+            $('table tbody tr').each(function(index) {
+                const rowNum = index + 1;
+                const row = [
+                    rowNum,
+                    $(this).find('td:eq(1)').text() || '',
+                    $(this).find('td:eq(2)').text() || '',
+                    $(this).find('td:eq(3)').text() || '',
+                    $(this).find('td:eq(4)').text() || '',
+                    $(this).find('td:eq(5)').text() || '',
+                    $(this).find('td:eq(6)').text() || '',
+                    $(this).find('td:eq(7)').text() || ''
+                ];
+                csv.push(row.join(','));
+            });
+
+            const csvContent = 'data:text/csv;charset=utf-8,' + csv.join('\n');
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement('a');
+            link.setAttribute('href', encodedUri);
+            link.setAttribute('download', 'inventory_' + '{{ inventory_data.submission_date[:10] }}' + '.csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    });
+</script>
+
+</body>
+{% endblock %}

@@ -1,0 +1,175 @@
+:root {
+    --light-cream: #f8f9fa;
+    --light-red: #6D2932;
+    --dark-purple: #638ECB;
+    --dark-green: #140c30;
+    --mid-green: #153d4c;
+    --light-green: #156f69;
+}
+
+body {
+    overflow-x: hidden;
+    background-color: var(--light-cream);
+}
+
+#wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+#sidebar-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-height: 100vh;
+    width: 15rem;
+    background-color: var(--dark-purple);
+    transition: transform 0.25s ease-out;
+    z-index: 900; /* Default z-index, can be overridden by JS */
+    flex-shrink: 0;
+}
+
+#sidebar-wrapper .sidebar-heading {
+    padding: 0.875rem 1.25rem;
+    font-size: 1.2rem;
+}
+
+#sidebar-wrapper .list-group {
+    width: 15rem;
+}
+
+#sidebar-wrapper .list-group-item {
+    color: white;
+    border: none;
+    padding: 1rem 1.25rem;
+    transition: all 0.3s ease;
+    background-color: transparent;
+}
+
+#sidebar-wrapper .list-group-item:not(.active):hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+    color: white;
+}
+
+#sidebar-wrapper .list-group-item.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    font-weight: bold;
+    border-left: 3px solid white;
+}
+
+#sidebar-wrapper .list-group-item i {
+    transition: transform 0.3s ease;
+}
+
+#sidebar-wrapper .list-group-item:hover i {
+    transform: scale(1.1);
+}
+
+#page-content-wrapper {
+    margin-left: 15rem;
+    min-width: 0;
+    width: 100%;
+    flex-grow: 1;
+    padding: 1rem;
+    transition: margin-left 0.25s ease-out;
+}
+
+#navbar {
+    z-index: 1001; /* Default z-index for navbar, can be overridden by JS */
+}
+
+#wrapper.toggled #sidebar-wrapper {
+    transform: translateX(-15rem);
+}
+
+#wrapper.toggled #page-content-wrapper {
+    margin-left: 0;
+}
+
+.bg-dark-purple {
+    background-color: var(--dark-purple) !important;
+}
+
+.bg-light-cream {
+    background-color: var(--light-cream) !important;
+}
+
+.bg-light-red {
+    background-color: var(--light-red) !important;
+}
+
+.text-purple {
+    color: var(--dark-purple) !important;
+}
+
+.color-box {
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    border-radius: 3px;
+}
+
+.logout-section {
+    margin-top: auto;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Progress Circle for Inventory Values */
+.progress-circle {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.progress-ring-track {
+    stroke: var(--light-red);
+}
+
+.progress-ring-progress {
+    stroke: var(--dark-purple);
+    transition: stroke-dashoffset 0.35s;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+}
+
+@media (max-width: 767.98px) {
+    #sidebar-wrapper {
+        transform: translateX(-15rem);
+    }
+
+    #page-content-wrapper {
+        margin-left: 0;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        transform: translateX(0);
+    }
+}
+
+button {
+    background-color: var(--dark-cream) !important;
+    color: #638ECB;
+}
+
+.btn-primary {
+    --bs-btn-color: #638ECB;
+    --bs-btn-bg: #0d6efd;
+    --bs-btn-border-color: #0d6efd;
+    --bs-btn-hover-color: #1A2D42;
+    --bs-btn-hover-bg: #0b5ed7;
+    --bs-btn-hover-border-color: #638ECB;
+}
+nav.navbar {
+ position: sticky;
+ z-index: 1030;
+top: 0;
+}
+#sidebarToggle{
+
+    color: darkred;
+
+}
