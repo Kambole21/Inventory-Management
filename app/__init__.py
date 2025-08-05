@@ -2,8 +2,18 @@ from flask import Flask, url_for
 from pymongo import MongoClient
 from datetime import datetime
 from flask_mail import Mail
+import logging
+from werkzeug.security import generate_password_hash
+from dotenv import load_dotenv
+import os
 
-database = MongoClient('mongodb://localhost:27017/')
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Load environment variables
+load_dotenv()
+database = MongoClient(os.getenv('MONGO_URI', 'mongodb+srv://kambole520:U1PmBvuwI94ClgCF@inventory.nberfep.mongodb.net/?retryWrites=true&w=majority&appName=Inventory'))
 db = database['Inventory']
 user_collection = db['user_collection']
 pending_users = db['Pending Users']
@@ -23,6 +33,24 @@ app.config['MAIL_DEFAULT_SENDER'] = 'kambole520@gmail.com'
 
 mail = Mail(app)
 
+# Creating a default user
+default_email = 'kambole520@yahoo.com'
+default_password = '12345678'
+if not user_collection.find_one({'email': default_email}):
+    hashed_password = generate_password_hash(default_password)
+    user_collection.insert_one({
+        'email': default_email,
+        'fname': 'Chomba',
+        'lname': 'Kambole',
+        'role': 'admin',
+        'phone_number': '0965226263',
+        'student_number': 'N/A',
+        'password': hashed_password,
+        'status': 'approved',
+        'submission_time': datetime.utcnow().isoformat() + 'Z'
+    })
+    logger.info(f"Default admin created: {default_email}")
+
 from app.routes import home, inventory, default_inventory, recent, registration, login, my_files, stats, view_stats, manage_user
 app.register_blueprint(home.bp)
 app.register_blueprint(inventory.bp)
@@ -34,4 +62,3 @@ app.register_blueprint(my_files.bp)
 app.register_blueprint(stats.bp)
 app.register_blueprint(view_stats.bp)
 app.register_blueprint(manage_user.bp)
-
