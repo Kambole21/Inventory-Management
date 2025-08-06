@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 # Load environment variables
 load_dotenv()
-database = MongoClient(os.getenv('mongodb://localhost:27017/'))
+database = MongoClient(os.getenv('MONGO_URI', 'mongodb+srv://kambole520:U1PmBvuwI94ClgCF@inventory.nberfep.mongodb.net/?retryWrites=true&w=majority&appName=Inventory'))
 db = database['Inventory']
 user_collection = db['user_collection']
 pending_users = db['Pending Users']
