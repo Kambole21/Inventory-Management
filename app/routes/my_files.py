@@ -7,7 +7,7 @@ from app.routes.login import login_required
 bp = Blueprint('my_files', __name__)
 
 @bp.route('/MyFiles_Page')
-@bp.login_required
+@login_required
 def files():
     user_id = session.get('user_id')
     user_data = None

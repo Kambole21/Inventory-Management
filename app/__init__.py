@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 # Load environment variables
 load_dotenv()
-database = MongoClient(os.getenv('MONGO_URI', 'mongodb+srv://kambole520:U1PmBvuwI94ClgCF@inventory.nberfep.mongodb.net/?retryWrites=true&w=majority&appName=Inventory'))
+database = MongoClient(os.getenv('mongodb://localhost:27017/'))
 db = database['Inventory']
 user_collection = db['user_collection']
 pending_users = db['Pending Users']
@@ -51,7 +51,7 @@ if not user_collection.find_one({'email': default_email}):
     })
     logger.info(f"Default admin created: {default_email}")
 
-from app.routes import home, inventory, default_inventory, recent, registration, login, my_files, stats, view_stats, manage_user
+from app.routes import home, inventory, default_inventory, recent, registration, login, my_files, stats, view_stats, manage_user, tutorials
 app.register_blueprint(home.bp)
 app.register_blueprint(inventory.bp)
 app.register_blueprint(default_inventory.bp)
@@ -62,3 +62,4 @@ app.register_blueprint(my_files.bp)
 app.register_blueprint(stats.bp)
 app.register_blueprint(view_stats.bp)
 app.register_blueprint(manage_user.bp)
+app.register_blueprint(tutorials.bp)

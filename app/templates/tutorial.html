@@ -1,0 +1,145 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename= 'tut.css')}}">
+<main class="container-fluid">
+
+	<h1 class="mt-4 text-purple border-bottom">Documentation 📜</h1>
+
+	<div class="row d-flex">
+		<p id="intro">Welcome to the Mulungushi University Inventory Management tutorial page. <br>
+		  Here you will be guided on how to use the inventory <b>worksheet</b>, and how to record each equipemnt that you will be required to record. <br>
+
+		</p>
+
+<!-- how to start a new inventory		 -->
+		<div class="row">
+
+			<h3 class="text-purple border-bottom"> 1. How to start a new Inventory➕</h3>
+			
+		<div class="row-md-6">
+
+			<p><b class="text-purple">a.</b>  When you are required to create a new inventory you will have to navigate to the Inventory page where you are required to click on the  <a href="{{url_for('inventory.inventory')}}"><b class="text-purple">Inventory</b></a> <br>
+			as shown in the image below  <b>(Image 1.0)</b>.	
+			</p>
+			
+			<span></span> <p class="text-muted text-purple">Image 1.0</p>
+			<img src="{{url_for('static', filename='images/inventory.png')}}"> 
+		</div>
+		<div class="row-md-6">
+
+			<p><b class="text-purple"> b.</b> After navigating to the Inventory page, you can click on <a href="{{url_for('default_inventory.default')}}"><b class="text-purple">Start New Inventory</b></a> to have access to a new inventory worksheet which will allow you to record equipments<br>
+			as shown in the image below <b>(Image 1.1) </b>.	
+			</p>
+			
+			<span></span> <p class="text-muted text-purple">Image 1.1</p>
+			<img src="{{url_for('static', filename='images/default.png')}}"> 
+		</div>
+		</div>
+
+<!-- how to record equipments -->
+		<div class="row mt-4">
+			<h3 class="text-purple border-bottom"> 2. How to record a new inventory🖋️</h3>
+			
+		<div class="row-md-6">
+
+			<p><b class="text-purple">a.</b>  A new worksheet of a blank inventory (Image 2.0). <br> <b>Step 1</b> You will have to enter the the <b>Department or School</b> you are recording inventories from. <br>
+			<b>Step 2</b> You are required to enter the <b>Date</b> when you are recording the inventory. <br>
+
+			The inventory worksheet has action buttons (<b>Add Row, Submit Inventory, Export To CSV, and Delete</b>).<br>
+			Start with the <b>Add Row</b> button, it adds a row to the worksheet with the aim that the user can record a number of equipments without starting a new inventory. <br>
+			If a user has entered undesired records, you can delete the entire row by pressing 🗑️ <br>
+			<b>Simple Right❓ Great❗❗❗ </b> <br> lets go to the next step
+			</p>
+			
+			<span></span> <p class="text-muted text-purple">Image 2.0</p>
+			<img src="{{url_for('static', filename='images/new.png')}}"> 
+		</div>
+		<div class="row-lg-6"> 
+
+			<p><b class="text-purple"> b.</b> The worksheet has eight (8) columns, and each column of the inventory worksheet is associated to one row. This can be done as follows: <br>
+			⚫ <b>No</b> column automatically assigned when you add a row by pressing the <b>Add Row</b> button <br>
+			⚫ <b>USERNAME</b> column contains the names of the individual using the equipments. In case an equipment is used by at least two people, you are required to enter <b>Office</b> <br>
+			⚫ <b>POSITION</b> column requires you to enter the name of the office where you are excersing your inventories from <br>
+			⚫ <b>ICT EQUIPMENT</b> column contains pre-defined equipment types that you can select from, but if you are instructed to enter an equipment which is not on the list provided you can type in the the equipment name <br>
+			⚫ <b>MODEL DETAILS</b> column requires you to enter the model details of the equipment. <br>
+			<b style="color:red;">Note That 📌</b>  <br>
+			Equipments with the same product and manufacturer can have the same model details <br>
+			⚫ <b>SERIAL NUMBER</b> column requires you to enter the serial number of the equipment <br>
+			⚫ <b>STATUS</b> column contains list of status that you are required to select from. which are as follows: <br>
+			    🔹 <b>Working</b>: equipment has no problems <br>
+			    🔹 <b>Faulty</b>: equipment has a problem <br>
+			    🔹 <b>Absolute</b>: equipment needs to be replaced <br>
+			⚫ <b>COMMENT</b> column requires you to pass a comment on what needs to be done on the equipment. If the equipment has no problems or nothing has been said about it from the user, you can leave the section empty <br>
+			Example on how to conduct an inventory is in the image below (Image 2.1)
+
+			</p>
+			
+			<span></span> <p class="text-muted text-purple">Image 2.1</p>
+			<img src="{{url_for('static', filename='images/save.png')}}"> 
+		</div>
+		</div>
+
+<!-- how to access submitted inventories -->
+		<div class="row mt-4">
+
+			<h3 class="text-purple border-bottom"> 3. How to Access Submitted/Saved Inventories</h3>
+			
+		<div class="row-md-6">
+
+			<p><b class="text-purple">a.</b>  After submitting an inventory, they can be found in the <a href="{{url_for('recent.recent')}}"><b class="text-purple">Recent Inventories</b></a> page. <br>
+			This page contains submitted inventories by other user, which can be viewed and edited.	<br>
+			as shown in the image below (Image 3.0)
+			</p>
+			
+			<span></span> <p class="text-muted text-purple">Image 3.0</p>
+			<img src="{{url_for('static', filename='images/recent.png')}}"> 
+		</div>
+		<div class="row-md-6 mt-4">
+
+			<p><b class="text-purple"> b.</b> The recent inventory page allows you to filter in order to quickly access the desired inventory. <br>
+			🔹 You can filter by <b>Created By</b> which will filter only the creator of the inventory. <br>
+			🔹 You can also filter by <b>Date</b> which will bring inventories according to the date specified. <br>
+			You can view an inventory by just clicking on it.
+			</p>
+			
+			<span></span> <p class="text-muted text-purple">Image 3.1</p>
+			<img src="{{url_for('static', filename='images/recent_a.png')}}"> 
+		</div>
+		<div class="row-md-6 mt-4">
+
+			<p><b class="text-purple">c.</b>  <a href="{{url_for('my_files.files')}}"><b class="text-purple">My Files</b></a> page. 
+				also contains inventories that the user was has logged in. The files can be access by clicking on the link<br>
+				as shown in the image below (Image 3.2).	
+			</p>
+			
+			<span></span> <p class="text-muted text-purple">Image 3.2</p>
+			<img src="{{url_for('static', filename='images/my_files.png')}}"> 
+		</div>
+		<div class="row-md-6 mt-4">
+
+			<p><b class="text-purple">d.</b> Indivindual files are all saved in the <a href="{{url_for('my_files.files')}}"><b class="text-purple">My Files</b></a> page. This files can only display files created by the user logged in. <br>
+			Smae as the <a href="{{url_for('recent.recent')}}"><b class="text-purple">Recent Inventories</b></a> page, you can view the inventory by clicking the 👁️ icon and you can also delete the file by clicking the 🗑️ icon. This can be done as shown in the image below (Image 3.3) 	
+			</p>
+			
+			<span></span> <p class="text-muted text-purple">Image 3.3</p>
+			<img src="{{url_for('static', filename='images/my_files_a.png')}}"> 
+		</div>
+		</div>
+
+
+		<div class="row-md-6 mt-4" id="warning">
+			
+			<b style="color:yellowgreen;">WARNING ⚠️</b> <br>
+		  The equipements that will be recorded are for keeping track of the ICT equipments that are part of the institution. So you are advised to take this exercise with caution. in case of concerns you can communicate to any of the authorized people
+
+
+		</div>
+
+	</div>
+	
+	
+</main>
+
+
+{% endblock %}

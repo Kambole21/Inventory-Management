@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 @bp.route('/Management_Page', methods=['GET', 'POST'])
-@bp.login_required
+@login_required
 def manage():
     user_id = session.get('user_id')
     user_data = None

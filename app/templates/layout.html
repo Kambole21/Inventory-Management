@@ -25,8 +25,8 @@
                 <a href="{{url_for('my_files.files')}}" class="list-group-item list-group-item-action bg-dark-purple text-white">
                     <i class="fa-solid fa-file me-2"></i> My Files
                 </a>
-                <a href="#" class="list-group-item list-group-item-action bg-dark-purple text-white">
-                    <i class="fa-solid fa-scroll me-2"></i>Tutorials
+                <a href="{{url_for('tutorial.tut')}}" class="list-group-item list-group-item-action bg-dark-purple text-white">
+                    <i class="fa-solid fa-scroll me-2"></i>Documentation
                 </a>
                 {% if user_data.role == 'admin' %}
                 <a href="{{url_for('stats.stats')}}" class="list-group-item list-group-item-action bg-dark-purple text-white">

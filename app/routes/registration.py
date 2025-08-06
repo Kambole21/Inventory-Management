@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 @bp.route('/Register_Page', methods=['GET', 'POST'])
-@bp.login_required
+@login_required
 def reg():
     from app import db, pending_users  
     form = RegistrationForm()

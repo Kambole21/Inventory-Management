@@ -6,7 +6,7 @@ from app.routes.login import login_required
 bp = Blueprint('stats', __name__)
 
 @bp.route('/Stats_Page')
-@bp.login_required
+@login_required
 def stats():
     user_id = session.get('user_id')
     user_data = None

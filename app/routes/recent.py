@@ -2,12 +2,12 @@ from flask import render_template, Blueprint, session, request, url_for, flash, 
 from app import db
 from bson.objectid import ObjectId
 from datetime import datetime
-from app.routes.login login_required
+from app.routes.login import login_required
 
 bp = Blueprint('recent', __name__)
 
 @bp.route('/Recent_inventories')
-@bp.login_required
+@login_required
 def recent():
     user_id = session.get('user_id')
     user_data = None

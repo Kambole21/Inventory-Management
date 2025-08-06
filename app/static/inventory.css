@@ -46,3 +46,12 @@
 #uploadButton{
   color: #0d6efd;
 }
+a{
+  text-decoration: none;
+  transition: 0.3s ease, box-shadow 0.3s ease
+}
+a:hover{
+  transform: scale(1.05);
+  box-shadow: 0 10px #638ecb;
+
+}
