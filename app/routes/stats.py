@@ -1,10 +1,12 @@
 from flask import render_template, Blueprint, session, request, url_for
 from bson.objectid import ObjectId
 from app import db  
+from app.routes.login import login_required
 
 bp = Blueprint('stats', __name__)
 
 @bp.route('/Stats_Page')
+@bp.login_required
 def stats():
     user_id = session.get('user_id')
     user_data = None

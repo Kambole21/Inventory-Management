@@ -3,14 +3,15 @@ from app import db, user_collection, pending_users, mail
 from flask_mail import Message
 from bson.objectid import ObjectId
 import logging
+from app.routes.login import login_required
 
 bp = Blueprint('manage_user', __name__)
 
-# Set up logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 @bp.route('/Management_Page', methods=['GET', 'POST'])
+@bp.login_required
 def manage():
     user_id = session.get('user_id')
     user_data = None

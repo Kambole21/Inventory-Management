@@ -2,10 +2,12 @@ from flask import Blueprint, render_template, request, session, flash, redirect,
 from bson.objectid import ObjectId
 from app import db
 from datetime import datetime
+from app.routes.login import login_required
 
 bp = Blueprint('my_files', __name__)
 
 @bp.route('/MyFiles_Page')
+@bp.login_required
 def files():
     user_id = session.get('user_id')
     user_data = None

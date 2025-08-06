@@ -2,10 +2,12 @@ from flask import Blueprint, render_template, request, session, flash, redirect,
 from app import db
 from bson.objectid import ObjectId
 from datetime import datetime
+app.routes.login import login_required
 
 bp = Blueprint('inventory', __name__)
 
 @bp.route('/Inventory')
+@bp.login_required
 def inventory():
     user_id = session.get('user_id')
     user_data = None
