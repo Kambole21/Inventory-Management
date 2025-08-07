@@ -64,19 +64,20 @@
         var el = document.getElementById("wrapper");
         var toggleButton = document.getElementById("sidebarToggle");
         var navbar = document.getElementById("navbar");
+        var sidebar = document.getElementById("sidebar-wrapper");
 
         // Function to update sidebar state based on screen width
         function updateSidebarState() {
             if (window.innerWidth >= 768) {
                 el.classList.remove("toggled"); // Show sidebar on desktop
                 toggleButton.style.display = "block";
-                navbar.style.zIndex = "1001"; // Navbar above sidebar on desktop
-                document.getElementById("sidebar-wrapper").style.zIndex = "1000";
+                navbar.style.zIndex = "1001";
+                sidebar.style.zIndex = "1000";
             } else {
                 el.classList.add("toggled"); // Hide sidebar on mobile by default
                 toggleButton.style.display = "block";
-                navbar.style.zIndex = "1001"; // Navbar above sidebar on mobile
-                document.getElementById("sidebar-wrapper").style.zIndex = "900"; // Sidebar below navbar
+                navbar.style.zIndex = "1001";
+                sidebar.style.zIndex = "900";
             }
         }
 
@@ -84,17 +85,32 @@
         updateSidebarState();
         window.addEventListener("resize", updateSidebarState);
 
-        // Toggle sidebar on button click
-        toggleButton.onclick = function () {
+        // Toggle sidebar only on explicit button click
+        toggleButton.addEventListener("click", function (e) {
+            e.preventDefault(); // Prevent default button behavior
             el.classList.toggle("toggled");
             if (window.innerWidth < 768 && !el.classList.contains("toggled")) {
-                navbar.style.zIndex = "900"; // Lower navbar z-index when sidebar is visible on mobile
-                document.getElementById("sidebar-wrapper").style.zIndex = "1001"; // Raise sidebar above navbar
+                navbar.style.zIndex = "900";
+                sidebar.style.zIndex = "1001";
             } else {
-                navbar.style.zIndex = "1001"; // Restore navbar above sidebar
-                document.getElementById("sidebar-wrapper").style.zIndex = "900";
+                navbar.style.zIndex = "1001";
+                sidebar.style.zIndex = "900";
             }
-        };
+            console.log("Sidebar toggled:", !el.classList.contains("toggled") ? "Shown" : "Hidden");
+        });
+
+        // Prevent touch scrolling from triggering sidebar
+        sidebar.addEventListener("touchmove", function (e) {
+            e.stopPropagation(); // Prevent scroll events from bubbling up
+        });
+
+        // Ensure sidebar doesn't toggle on scroll
+        document.addEventListener("scroll", function (e) {
+            if (window.innerWidth < 768 && !el.classList.contains("toggled")) {
+                // If sidebar is visible on mobile, prevent scroll from closing it
+                e.stopPropagation();
+            }
+        });
     </script>
 </body>
 </html>

@@ -2,25 +2,15 @@
     padding: 1rem;
 }
 
-.card {
-    background: #DEDCDC; /* Card background */
-    border-radius: 0.25rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.caption-wrapper {
-    margin-bottom: 1rem;
-    text-align: center;
-}
-
 .table-responsive-lg {
     overflow-x: auto;
+    margin-top: 1rem;
 }
 
 .table {
     width: 100%;
     margin-bottom: 1rem;
-    background-color: #DEDCDC; /* Set table background to #DEDCDC */
+    background-color: #DEDCDC;
     font-size: 0.875rem;
 }
 
@@ -33,65 +23,64 @@
     padding: 0.5rem;
     vertical-align: middle;
     border-top: 1px solid #dee2e6;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
-/* Remove borders for inputs inside table */
-.table input.form-control {
+.table input.form-control,
+.table select.form-control {
     border: none;
     border-radius: 0;
     padding: 0.25rem;
     font-size: 0.875rem;
     background-color: transparent;
     box-shadow: none;
-    width: 100%; /* Ensure full width within td */
+    width: 100%;
 }
 
-/* Style for serial number input feedback */
 .serial-number-input {
     position: relative;
-    padding-bottom: 0.25rem; /* Space for feedback */
+    padding-bottom: 0.25rem;
 }
 
 .serial-number-input.is-valid {
-    border-bottom: 2px solid #28a745; /* Green for valid */
+    border-bottom: 2px solid #28a745;
 }
 
 .serial-number-input.is-invalid {
-    border-bottom: 2px solid #dc3545; /* Red for invalid */
+    border-bottom: 2px solid #dc3545;
 }
 
 .valid-feedback, .invalid-feedback {
-    display: block; /* Ensure block-level to avoid overlap */
+    display: block;
     font-size: 0.75rem;
-    margin-top: 0.25rem; /* Space above feedback */
-    padding-left: 0.5rem; /* Align with input */
-    color: inherit; /* Inherit color from parent class */
-    font-family: inherit; /* Ensure text-only */
-    background: none; /* Remove any background that might imply icons */
+    margin-top: 0.25rem;
+    padding-left: 0.5rem;
+    color: inherit;
+    font-family: inherit;
+    background: none;
 }
 
 .valid-feedback {
-    color: #28a745; /* Green for valid message */
+    color: #28a745;
 }
 
 .invalid-feedback {
-    color: #dc3545; /* Red for invalid message */
+    color: #dc3545;
 }
 
-/* Explicitly hide any icon elements */
 .valid-feedback::before,
 .invalid-feedback::before,
 .valid-feedback::after,
 .invalid-feedback::after {
-    content: none; /* Remove any pseudo-element icons */
+    content: none;
 }
 
-/* Ensure feedback doesn’t break table layout */
 .table td {
-    position: relative; /* Allow positioning of feedback */
+    position: relative;
 }
 
-/* Hide default Bootstrap feedback arrows */
 .invalid-feedback::before,
 .valid-feedback::before {
     display: none;
@@ -112,15 +101,15 @@
 }
 
 .btn-primary {
-    color: #638ECB; /* Set button text color */
-    background-color: #0d6efd; /* Base background for primary button */
-    border-color: #0d6efd; /* Base border color for primary button */
+    color: #638ECB;
+    background-color: #0d6efd;
+    border-color: #0d6efd;
 }
 
 .btn-primary:hover {
-    color: #1A2D42; /* Hover text color */
-    background-color: #0b5ed7; /* Hover background color */
-    border-color: #638ECB; /* Hover border color */
+    color: #638ECB;
+    background-color: #0b5ed7;
+    border-color: #121f33;
 }
 
 .btn-outline-primary {
@@ -130,11 +119,11 @@
 
 .btn-outline-primary:hover {
     background-color: #007bff;
-    color: #fff;
+    color: #121f33;
 }
 
 .btn-success {
-    color: #198754;
+    color: #28a745;
     background-color: #28a745;
     border-color: #28a745;
     display: flex;
@@ -145,7 +134,7 @@
 .btn-success:hover {
     background-color: #218838;
     border-color: #1e7e34;
-    color: #49c18a;
+    color: #8ed69f;
 }
 
 .btn-danger {
@@ -157,6 +146,22 @@
 .btn-danger:hover {
     background-color: #c82333;
     border-color: #c82333;
+}
+
+.btn-warning {
+    color: #212529;
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+    border-color: #d39e00;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
 }
 
 .form-control {
@@ -201,10 +206,6 @@
     margin-bottom: 1.5rem;
 }
 
-.p-4 {
-    padding: 1.5rem;
-}
-
 .text-center {
     text-align: center;
 }
@@ -217,101 +218,12 @@
     font-weight: 700;
 }
 
-/* Responsive Styles */
-@media (max-width: 768px) {
-    .main-content {
-        padding: 1rem;
-    }
-    .table {
-        font-size: 0.75rem;
-    }
-    .table input.form-control {
-        padding: 0.2rem;
-        font-size: 0.75rem;
-    }
-    .row.mb-4 .col-md-6 {
-        margin-bottom: 1rem;
-    }
-    .tables-container {
-        flex-direction: column !important;
-    }
-}
-
-@media (max-width: 500px) {
-    .table th, .table td {
-        padding: 0.5rem;
-    }
-    .form-label {
-        font-size: 0.875rem;
-    }
-}
-
-/* Center the heading */
-.intro {
-    text-align: center;
-    margin: 0 auto;
-}
-
-/* Underline style for inputs outside the table */
-input.form-control:not(.table input) {
-    border: none;
-    border-bottom: 1px solid #ced4da;
-    border-radius: 0;
-    background-color: transparent;
-    box-shadow: none;
-}
-
-/* Green focus effect for better UX */
-input.form-control:focus {
-    border-bottom: 2px solid #4caf50;
-    outline: none;
-    box-shadow: none;
-}
-
-/* Style for the tables container */
-.tables-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    gap: 2rem;
-}
-
-.tables-container .table-responsive {
-    flex: 1;
-    width: 50%;
-}
-
-/* Ensure tables stack on smaller screens */
-@media (max-width: 768px) {
-    .tables-container .table-responsive {
-        width: 100%;
-    }
-}
-
-/* Centered table styling */
-#infotable {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 15px;
-}
-
-/* Styling for the legend */
-legend {
-    font-size: 1.25rem;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 1rem;
-    border-bottom: 2px solid #ccc;
-    padding-bottom: 0.5rem;
-}
-
-/* Styling for the date input */
 input[type="date"] {
     padding: 0.5rem;
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
     font-size: 0.9rem;
-    margin-bottom: 1rem; /* Add some space below the date input */
+    margin-bottom: 1rem;
 }
 
 input[type="date"]:focus {
@@ -320,28 +232,18 @@ input[type="date"]:focus {
     box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
 }
 
-/* Specific styling for the submit button */
-button[type="submit"].btn-primary {
-    color: #638ECB;
-    background-color: #0d6efd;
-    border-color: #0d6efd;
+input.form-control:not(.table input) {
+    border: none;
+    border-bottom: 1px solid #ced4da;
+    border-radius: 0;
+    background-color: transparent;
+    box-shadow: none;
 }
 
-button[type="submit"].btn-primary:hover {
-    color: #1A2D42;
-    background-color: #0b5ed7;
-    border-color: #638ECB;
-}
-
-/* Specific styling for the "Add Row" button */
-button#addRow.btn-outline-primary {
-    color: #007bff; /* Keeps the standard Bootstrap blue for outline */
-    border-color: #007bff;
-}
-
-button#addRow.btn-outline-primary:hover {
-    background-color: #007bff;
-    color: #fff;
+input.form-control:focus {
+    border-bottom: 2px solid #4caf50;
+    outline: none;
+    box-shadow: none;
 }
 
 #bin {
@@ -349,18 +251,111 @@ button#addRow.btn-outline-primary:hover {
     background-color: black;
 }
 
-/* Styling for the CSV export button */
-.btn-success {
-    color: #198754;
-    background-color: #28a745;
-    border-color: #28a745;
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
+/* Responsive Styles */
+@media (max-width: 767.98px) {
+    .main-content {
+        padding: 0.5rem;
+    }
+
+    .table {
+        font-size: 0.7rem;
+    }
+
+    .table td, .table th {
+        padding: 0.3rem;
+        max-width: 100px;
+    }
+
+    .table input.form-control,
+    .table select.form-control {
+        padding: 0.2rem;
+        font-size: 0.7rem;
+    }
+
+    .btn-sm {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.7rem;
+    }
+
+    .form-control-sm {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.7rem;
+    }
+
+    .valid-feedback, .invalid-feedback {
+        font-size: 0.65rem;
+    }
+
+    .row-num-col {
+        max-width: 40px;
+    }
+
+    .username-col,
+    .position-col,
+    .ict-equipment-col,
+    .model-details-col,
+    .serial-number-col,
+    .comment-col {
+        max-width: 90px;
+    }
+
+    .status-col {
+        max-width: 80px;
+    }
+
+    .action-col {
+        max-width: 60px;
+    }
 }
 
-.btn-success:hover {
-    background-color: #218838;
-    border-color: #1e7e34;
-    color: #49c18a;
+@media (max-width: 576px) {
+    .table {
+        font-size: 0.65rem;
+    }
+
+    .table td, .table th {
+        padding: 0.2rem;
+        max-width: 80px;
+    }
+
+    .table input.form-control,
+    .table select.form-control {
+        padding: 0.15rem;
+        font-size: 0.65rem;
+    }
+
+    .btn-sm {
+        padding: 0.15rem 0.3rem;
+        font-size: 0.65rem;
+    }
+
+    .form-control-sm {
+        padding: 0.15rem 0.3rem;
+        font-size: 0.65rem;
+    }
+
+    .valid-feedback, .invalid-feedback {
+        font-size: 0.6rem;
+    }
+
+    .row-num-col {
+        max-width: 35px;
+    }
+
+    .username-col,
+    .position-col,
+    .ict-equipment-col,
+    .model-details-col,
+    .serial-number-col,
+    .comment-col {
+        max-width: 80px;
+    }
+
+    .status-col {
+        max-width: 70px;
+    }
+
+    .action-col {
+        max-width: 50px;
+    }
 }

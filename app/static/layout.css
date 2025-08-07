@@ -29,6 +29,15 @@ body {
     flex-shrink: 0;
 }
 
+#wrapper.toggled #sidebar-wrapper {
+    transform: translateX(-15rem);
+    pointer-events: none; /* Disable interactions when hidden */
+}
+
+#wrapper:not(.toggled) #sidebar-wrapper {
+    pointer-events: auto; /* Enable interactions when visible */
+}
+
 #sidebar-wrapper .sidebar-heading {
     padding: 0.875rem 1.25rem;
     font-size: 1.2rem;
@@ -75,16 +84,12 @@ body {
     transition: margin-left 0.25s ease-out;
 }
 
-#navbar {
-    z-index: 1001; /* Default z-index for navbar, can be overridden by JS */
-}
-
-#wrapper.toggled #sidebar-wrapper {
-    transform: translateX(-15rem);
-}
-
 #wrapper.toggled #page-content-wrapper {
     margin-left: 0;
+}
+
+#navbar {
+    z-index: 1001; /* Default z-index for navbar, can be overridden by JS */
 }
 
 .bg-dark-purple {
@@ -151,7 +156,7 @@ body {
 }
 
 button {
-    background-color: var(--dark-cream) !important;
+    background-color: var(--light-cream) !important; /* Updated from --dark-cream */
     color: #638ECB;
 }
 
@@ -163,13 +168,13 @@ button {
     --bs-btn-hover-bg: #0b5ed7;
     --bs-btn-hover-border-color: #638ECB;
 }
+
 nav.navbar {
- position: sticky;
- z-index: 1030;
-top: 0;
+    position: sticky;
+    z-index: 1030;
+    top: 0;
 }
-#sidebarToggle{
 
+#sidebarToggle {
     color: darkred;
-
 }

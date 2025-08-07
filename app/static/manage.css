@@ -4,6 +4,7 @@
 
 .table-responsive {
     overflow-x: auto;
+    margin-top: 1rem;
 }
 
 .table {
@@ -22,12 +23,16 @@
     padding: 0.5rem;
     vertical-align: middle;
     border-top: 1px solid #dee2e6;
+    white-space: nowrap; /* Prevent text wrapping by default */
+    text-overflow: ellipsis; /* Truncate long text */
+    overflow: hidden;
 }
 
 .action-buttons {
     display: flex;
     gap: 0.5rem;
     justify-content: center;
+    align-items: center;
 }
 
 .btn-sm {
@@ -47,7 +52,7 @@
 }
 
 .btn-success {
-    color: #198754;
+    color: #fff; /* White for better contrast */
     background-color: #28a745;
     border-color: #28a745;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
@@ -57,11 +62,11 @@
     background-color: #218838;
     border-color: #1e7e34;
     box-shadow: 0 0 10px rgba(40, 167, 69, 0.4);
-    color: #198754;
+    color: #fff;
 }
 
 .btn-danger {
-    color: #dc3545;
+    color: #fff; /* White for better contrast */
     background-color: #dc3545;
     border-color: #dc3545;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
@@ -71,9 +76,8 @@
     background-color: #c82333;
     border-color: #bd2130;
     box-shadow: 0 0 10px rgba(220, 53, 69, 0.4);
-    color: #dc3545;
+    color: #fff;
 }
-
 
 .text-center {
     text-align: center;
@@ -86,29 +90,70 @@
 .alert {
     margin-bottom: 1rem;
 }
-.action-buttons {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-}
 
 .form-select-sm {
     width: 120px;
 }
 
-.btn-sm {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.875rem;
-}
-
-.alert {
-    margin-bottom: 1rem;
-}
-
-.table-responsive {
-    margin-top: 1rem;
-}
-
 .text-purple {
     color: var(--dark-purple) !important;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 767.98px) {
+    .table {
+        font-size: 0.7rem; /* Reduced font size for mobile */
+    }
+
+    .table td, .table th {
+        padding: 0.3rem; /* Tighter padding for compact layout */
+        max-width: 120px; /* Limit column width to fit mobile screens */
+    }
+
+    .action-buttons {
+        flex-wrap: nowrap;
+        gap: 0.3rem; /* Smaller gap for buttons */
+    }
+
+    .btn-sm {
+        padding: 0.2rem 0.4rem; /* Smaller buttons */
+        font-size: 0.7rem; /* Match table font size */
+    }
+
+    .form-select-sm {
+        width: 100px; /* Smaller dropdown */
+        font-size: 0.7rem; /* Match table font size */
+    }
+
+    /* Ensure Email and Name columns are readable */
+    .table td.email-col,
+    .table td.name-col {
+        max-width: 100px; /* Slightly smaller for mobile */
+    }
+}
+
+@media (max-width: 576px) {
+    .table {
+        font-size: 0.65rem; /* Further reduce for very small screens */
+    }
+
+    .table td, .table th {
+        padding: 0.2rem; /* Even tighter padding */
+        max-width: 100px; /* Further limit column width */
+    }
+
+    .action-buttons {
+        flex-wrap: wrap; /* Allow wrapping if needed */
+        gap: 0.2rem;
+    }
+
+    .btn-sm {
+        padding: 0.15rem 0.3rem; /* Smallest button size */
+        font-size: 0.65rem;
+    }
+
+    .form-select-sm {
+        width: 90px; /* Smallest dropdown size */
+        font-size: 0.65rem;
+    }
 }

@@ -30,11 +30,11 @@
         <table class="table table-bordered table-sm">
             <thead class="table-light">
                 <tr>
-                    <th>Email</th>
-                    <th>Name</th>
+                    <th class="email-col">Email</th>
+                    <th class="name-col">Name</th>
                     <th>Role</th>
-                    <th>Phone Number</th>
-                    <th>Student Number</th>
+                    <th class="hide-mobile">Phone Number</th>
+                    <th class="hide-mobile">Student Number</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
@@ -43,11 +43,11 @@
                 {% if pending_users %}
                     {% for user in pending_users %}
                         <tr>
-                            <td>{{ user.email }}</td>
-                            <td>{{ user.fname }} {{ user.lname }}</td>
+                            <td class="email-col">{{ user.email }}</td>
+                            <td class="name-col">{{ user.fname }} {{ user.lname }}</td>
                             <td>{{ user.role }}</td>
-                            <td>{{ user.phone_number }}</td>
-                            <td>{{ user.student_number if user.student_number else 'N/A' }}</td>
+                            <td class="hide-mobile">{{ user.phone_number }}</td>
+                            <td class="hide-mobile">{{ user.student_number if user.student_number else 'N/A' }}</td>
                             <td>{{ user.status }}</td>
                             <td>
                                 <div class="action-buttons">
