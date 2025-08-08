@@ -3,41 +3,37 @@
 
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='inventory.css') }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <main class="container-fluid py-4">
   <div class="d-flex justify-content-center flex-wrap gap-3">
-
-
-    <a href="{{url_for('default_inventory.default')}}">
-
-    <div class="card shadow-sm p-3 mb-2 rounded bg-light-cream" style="width: 18rem;">
-      <div class="card-title">Start New Inventory</div>
-      <div class="card-body d-flex align-items-center">
-        <i class="fa-solid fa-plus fa-2x text-purple me-3"></i>
+    <a href="{{ url_for('default_inventory.default') }}">
+      <div class="card shadow-sm p-3 mb-2 rounded bg-light-cream" style="width: 18rem;">
+        <div class="card-title">Start New Inventory</div>
+        <div class="card-body d-flex align-items-center">
+          <i class="fa-solid fa-plus fa-2x text-purple me-3"></i>
+        </div>
       </div>
-    </div>
     </a>
 
     <a href="#">
       <div class="card shadow-sm p-3 mb-2 rounded bg-light-cream" style="width: 18rem;">
-      <div class="card-title">Customize Inventory</div>
-      <div class="card-body d-flex align-items-center">
-        <i class="fa-solid fa-screwdriver-wrench fa-2x text-purple me-3"></i>
+        <div class="card-title">Customize Inventory</div>
+        <div class="card-body d-flex align-items-center">
+          <i class="fa-solid fa-screwdriver-wrench fa-2x text-purple me-3"></i>
+        </div>
       </div>
-    </div>
     </a>
-    
 
     <a href="#" data-bs-toggle="modal" data-bs-target="#uploadModal">
       <div class="card shadow-sm p-3 mb-2 rounded bg-light-cream" style="width: 18rem;">
-      <div class="card-title">Upload Inventory</div>
-      <div class="card-body d-flex align-items-center">
-        <i class="fa-solid fa-upload fa-2x text-purple me-3"></i>
+        <div class="card-title">Upload Inventory</div>
+        <div class="card-body d-flex align-items-center">
+          <i class="fa-solid fa-upload fa-2x text-purple me-3"></i>
+        </div>
       </div>
-    </div>
     </a>
-
-
   </div>
 </main>
 
@@ -51,15 +47,15 @@
       </div>
       <div class="modal-body">
         <div class="drop-zone" id="dropZone">
-          <i class="fa-solid fa-cloud-upload-alt fa-3x"></i>
-          <p>Drag and drop your CSV file here or <span class="file-input-label">choose a file</span></p>
-          <input type="file" id="fileInput" accept=".csv" style="display: none;">
+          <i class="fa-solid fa-cloud-arrow-up fa-3x"></i>
+          <p>Drag and drop your CSV or Excel file here or <span class="file-input-label">choose a file</span></p>
+          <input type="file" id="fileInput" accept=".csv,.xlsx,.xls,.xlsb,.xlsm" style="display: none;">
         </div>
         <div id="preview" class="mt-3"></div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closebtn">Close</button>
-        <button type="button" class="btn btn-primary" id="uploadButton" disabled>Upload</button>
+        <button type="button" class="btn btn-primary" id="uploadButton" disabled>Save</button>
       </div>
     </div>
   </div>
@@ -72,7 +68,14 @@
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('fileInput');
     const uploadButton = document.getElementById('uploadButton');
+    const preview = document.getElementById('preview');
     let file;
+
+    // Check if user is logged in
+    if (!'{{ session.get("user_id") }}') {
+      alert('Please log in to upload inventory.');
+      window.location.href = '{{ url_for("login.log") }}';
+    }
 
     // Trigger file input when label is clicked
     $('.file-input-label').on('click', function(e) {
@@ -94,58 +97,168 @@
       e.preventDefault();
       dropZone.classList.remove('dragover');
       file = e.dataTransfer.files[0];
-      if (file && file.name.endsWith('.csv')) {
-        previewFile(file);
-        uploadButton.disabled = false;
-      } else {
-        alert('Please upload a valid CSV file.');
-        uploadButton.disabled = true;
-      }
+      handleFile(file);
     });
 
     // Handle file input change
     fileInput.addEventListener('change', (e) => {
       file = e.target.files[0];
-      if (file && file.name.endsWith('.csv')) {
-        previewFile(file);
-        uploadButton.disabled = false;
-      } else {
-        alert('Please upload a valid CSV file.');
-        uploadButton.disabled = true;
-      }
+      handleFile(file);
     });
 
-    // Preview file content
-    function previewFile(file) {
+    // Validate and process file
+    function handleFile(file) {
+      if (!file) {
+        alert('No file selected.');
+        uploadButton.disabled = true;
+        preview.innerHTML = '';
+        return;
+      }
+
+      const validExtensions = ['.csv', '.xlsx', '.xls', '.xlsb', '.xlsm'];
+      if (!validExtensions.some(ext => file.name.toLowerCase().endsWith(ext))) {
+        alert('Please upload a valid CSV or Excel file (.csv, .xlsx, .xls, .xlsb, .xlsm).');
+        uploadButton.disabled = true;
+        preview.innerHTML = '';
+        return;
+      }
+
+      if (file.size > 10 * 1024 * 1024) { // 10MB limit
+        alert('File is too large. Maximum size is 10MB.');
+        uploadButton.disabled = true;
+        preview.innerHTML = '';
+        return;
+      }
+
+      previewAndParseFile(file);
+    }
+
+    // Preview and parse file content
+    function previewAndParseFile(file) {
       const reader = new FileReader();
       reader.onload = function(e) {
-        const text = e.target.result;
-        const preview = document.getElementById('preview');
-        preview.innerHTML = `<pre>${text.substring(0, 500)}</pre>`; // Show first 500 characters
+        try {
+          let data;
+          if (file.name.toLowerCase().endsWith('.csv')) {
+            Papa.parse(file, {
+              header: true,
+              skipEmptyLines: true,
+              complete: function(results) {
+                data = results.data.map(row => normalizeRow(row));
+                validateAndDisplay(data);
+              },
+              error: function(error) {
+                console.error('PapaParse error:', error);
+                alert('Error parsing CSV: ' + error.message);
+                uploadButton.disabled = true;
+                preview.innerHTML = '';
+              }
+            });
+          } else {
+            const dataArray = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(dataArray, { type: 'array' });
+            const firstSheet = workbook.SheetNames[0];
+            if (!firstSheet) {
+              throw new Error('No sheets found in Excel file.');
+            }
+            const worksheet = workbook.Sheets[firstSheet];
+            const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+            if (jsonData.length < 1) {
+              throw new Error('No data found in Excel file.');
+            }
+            const headers = jsonData[0];
+            data = jsonData.slice(1).map(row => {
+              let obj = {};
+              headers.forEach((header, i) => {
+                obj[header] = row[i] || '';
+              });
+              return normalizeRow(obj);
+            });
+            validateAndDisplay(data);
+          }
+        } catch (error) {
+          console.error('Parsing error:', error);
+          alert('Error parsing file: ' + error.message);
+          uploadButton.disabled = true;
+          preview.innerHTML = '';
+        }
       };
-      reader.readAsText(file);
+      reader.onerror = function() {
+        console.error('FileReader error:', reader.error);
+        alert('Error reading file.');
+        uploadButton.disabled = true;
+        preview.innerHTML = '';
+      };
+      if (file.name.toLowerCase().endsWith('.csv')) {
+        reader.readAsText(file);
+      } else {
+        reader.readAsArrayBuffer(file);
+      }
+    }
+
+    // Normalize row data to match expected structure
+    function normalizeRow(row) {
+      return {
+        username: row.USERNAME || row.username || '',
+        position: row.POSITION || row.position || '',
+        ict_equipment: row['ICT EQUIPMENT'] || row.ict_equipment || '',
+        model_details: row['MODEL DETAILS'] || row.model_details || 'N/A',
+        serial_number: row['SERIAL NUMBER'] || row.serial_number || 'N/A',
+        status: row.STATUS || row.status || '',
+        comment: row.COMMENT || row.comment || ''
+      };
+    }
+
+    // Validate and display parsed data
+    function validateAndDisplay(data) {
+      if (!data.length) {
+        alert('No valid data found in file.');
+        uploadButton.disabled = true;
+        preview.innerHTML = '';
+        return;
+      }
+      const requiredFields = ['username', 'ict_equipment', 'serial_number', 'status'];
+      for (let row of data) {
+        for (let field of requiredFields) {
+          if (!row[field] || !row[field].toString().trim()) {
+            alert(`Missing or empty required field: ${field} in row: ${JSON.stringify(row)}`);
+            uploadButton.disabled = true;
+            preview.innerHTML = '';
+            return;
+          }
+        }
+      }
+      file.parsedData = data;
+      preview.innerHTML = `<pre>${JSON.stringify(data.slice(0, 2), null, 2)}</pre>`;
+      uploadButton.disabled = false;
+      console.log('Validated parsed data:', data);
     }
 
     // Handle upload
     uploadButton.addEventListener('click', () => {
-      if (file) {
-        const formData = new FormData();
-        formData.append('importCsv', file);
-        $.ajax({
-          url: '{{ url_for("default_inventory.default") }}',
-          type: 'POST',
-          data: formData,
-          processData: false,
-          contentType: false,
-          success: function(response) {
-            $('#uploadModal').modal('hide');
-            window.location.href = '{{ url_for("recent.recent") }}';
-          },
-          error: function(xhr, status, error) {
-            alert('Upload failed: ' + error);
-          }
-        });
+      if (!file || !file.parsedData || !file.parsedData.length) {
+        alert('No valid data to upload.');
+        return;
       }
+      console.log('Uploading data:', file.parsedData);
+      const formData = new FormData();
+      formData.append('csvData', JSON.stringify(file.parsedData));
+      $.ajax({
+        url: '{{ url_for("inventory.upload_inventory") }}',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+          console.log('Upload success:', response);
+          $('#uploadModal').modal('hide');
+          window.location.href = response.redirect;
+        },
+        error: function(xhr, status, error) {
+          console.error('Upload error:', xhr.responseJSON, status, error);
+          alert('Upload failed: ' + (xhr.responseJSON?.error || 'Internal server error'));
+        }
+      });
     });
   });
 </script>

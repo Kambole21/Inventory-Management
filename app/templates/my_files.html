@@ -21,22 +21,22 @@
         <table class="table table-bordered table-sm">
             <thead class="table-light">
                 <tr>
-                    <th>Inventory Date</th>
-                    <th>Department/School</th>
-                    <th>Created By</th>
-                    <th>Items</th>
-                    <th>Actions</th>
+                    <th class="inventory-date-col">Inventory Date</th>
+                    <th class="dept-school-col">Department/School</th>
+                    <th class="created-by-col">Created By</th>
+                    <th class="items-col">Items</th>
+                    <th class="actions-col">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% if inventories %}
                     {% for inventory in inventories %}
                         <tr>
-                            <td>{{ inventory.inventory_date }}</td>
-                            <td>{{ inventory.department_school or 'N/A' }}</td>
-                            <td>{{ inventory.created_by }}</td>
-                            <td>{{ inventory.rows|length }}</td>
-                            <td>
+                            <td class="inventory-date-col">{{ inventory.inventory_date }}</td>
+                            <td class="dept-school-col">{{ inventory.department_school or 'N/A' }}</td>
+                            <td class="created-by-col">{{ inventory.created_by }}</td>
+                            <td class="items-col">{{ inventory.rows|length }}</td>
+                            <td class="actions-col">
                                 <div class="action-buttons">
                                     <a href="{{ url_for('my_files.view_my_file', inventory_id=inventory._id) }}" class="btn btn-sm btn-info" title="View">
                                         <i class="fa-solid fa-eye"></i>
@@ -71,18 +71,15 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     $(document).ready(function() {
-        // Debug form submissions
         $('form').on('submit', function(e) {
             console.log('Form submitted to:', $(this).attr('action'));
             const formData = $(this).serialize();
             console.log('Form data:', formData);
         });
 
-        // Prevent default on View link for debugging (optional)
         $('.btn-info').on('click', function(e) {
-            console.log('View clicked for:', $(this).find('a').attr('href'));
+            console.log('View clicked for:', $(this).attr('href'));
         });
     });
-</script>
 </script>
 {% endblock %}

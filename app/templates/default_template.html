@@ -45,12 +45,12 @@
                         <option value="{{ school }}" {% if edit_data and edit_data.department_school == school %}selected{% endif %}>{{ school }}</option>
                     {% endfor %}
                 </optgroup>
-                <option value="custom" {% if edit_data and edit_data.department_school not in departments and edit_data.department_school not in schools %}selected{% endif %}>Type Custom Depart/School</option>
+                <option value="custom" {% if edit_data and edit_data.department_school and edit_data.department_school not in departments and edit_data.department_school not in schools %}selected{% endif %}>Type Custom Depart/School</option>
             </select>
             <input type="text" class="form-control mt-2" id="customDepartmentSchool" name="customDepartmentSchool" 
-                   style="display: {% if edit_data and edit_data.department_school not in departments and edit_data.department_school not in schools %}block{% else %}none{% endif %};" 
+                   style="display: {% if edit_data and edit_data.department_school and edit_data.department_school not in departments and edit_data.department_school not in schools %}block{% else %}none{% endif %};" 
                    placeholder="Enter custom Depart/School"
-                   value="{% if edit_data and edit_data.department_school not in departments and edit_data.department_school not in schools %}{{ edit_data.department_school }}{% endif %}">
+                   value="{% if edit_data and edit_data.department_school and edit_data.department_school not in departments and edit_data.department_school not in schools %}{{ edit_data.department_school }}{% endif %}">
         </div>
         <input type="date" name="inventoryDate" id="inventoryDate" required value="{{ edit_data.inventory_date if edit_data else '' }}">
         <input type="hidden" id="inventoryData" name="inventoryData">
@@ -70,18 +70,18 @@
                     </tr>
                 </thead>
                 <tbody id="inventoryTable">
-                    {% if edit_data %}
+                    {% if edit_data and edit_data.rows %}
                         {% for row in edit_data.rows %}
                             <tr>
                                 <td class="row-num-col">{{ loop.index }}</td>
-                                <td class="username-col"><input type="text" class="form-control form-control-sm" name="username{{ loop.index }}" value="{{ row.username }}"></td>
-                                <td class="position-col"><input type="text" class="form-control form-control-sm" name="position{{ loop.index }}" value="{{ row.position }}"></td>
+                                <td class="username-col"><input type="text" class="form-control form-control-sm" name="username{{ loop.index }}" value="{{ row.username|safe }}"></td>
+                                <td class="position-col"><input type="text" class="form-control form-control-sm" name="position{{ loop.index }}" value="{{ row.position|safe }}"></td>
                                 <td class="ict-equipment-col">
                                     <select class="form-control form-control-sm" name="ict_equipment{{ loop.index }}" onchange="toggleCustomICT(this, {{ loop.index }})" required>
                                         <option value="">Select ICT Equipment or Type</option>
                                         {% set ict_equipment = [
                                             'Monitor', 'CPU', 'Laptops', 'Printers', 'Photocopiers',
-                                            'Scanners', 'Routers', 'switches', 'access points', 'Projector'
+                                            'Scanners', 'Routers', 'switches', 'access points', 'Projector', 'UPS'
                                         ] %}
                                         {% for equip in ict_equipment %}
                                             <option value="{{ equip }}" {% if row.ict_equipment == equip %}selected{% endif %}>{{ equip }}</option>
@@ -90,8 +90,8 @@
                                     </select>
                                     <input type="text" class="form-control form-control-sm mt-1" id="customICT{{ loop.index }}" name="custom_ict_equipment{{ loop.index }}" value="{{ row.ict_equipment if row.ict_equipment not in ict_equipment else '' }}" style="display: {{ 'block' if row.ict_equipment and row.ict_equipment not in ict_equipment else 'none' }};" placeholder="Enter custom ICT Equipment">
                                 </td>
-                                <td class="model-details-col"><input type="text" class="form-control form-control-sm" name="model_details{{ loop.index }}" value="{{ row.model_details }}"></td>
-                                <td class="serial-number-col"><input type="text" class="form-control form-control-sm serial-number-input" name="serial_number{{ loop.index }}" value="{{ row.serial_number }}" data-row="{{ loop.index }}"></td>
+                                <td class="model-details-col"><input type="text" class="form-control form-control-sm" name="model_details{{ loop.index }}" value="{{ row.model_details|safe }}"></td>
+                                <td class="serial-number-col"><input type="text" class="form-control form-control-sm serial-number-input" name="serial_number{{ loop.index }}" value="{{ row.serial_number|safe }}" data-row="{{ loop.index }}"></td>
                                 <td class="status-col">
                                     <select class="form-control form-control-sm" name="status{{ loop.index }}" required>
                                         <option value="">Select</option>
@@ -100,7 +100,7 @@
                                         <option value="Absolute" {% if row.status == 'Absolute' %}selected{% endif %}>Absolute</option>
                                     </select>
                                 </td>
-                                <td class="comment-col"><input type="text" class="form-control form-control-sm" name="comment{{ loop.index }}" value="{{ row.comment }}"></td>
+                                <td class="comment-col"><input type="text" class="form-control form-control-sm" name="comment{{ loop.index }}" value="{{ row.comment|safe }}"></td>
                                 <td class="action-col"><button type="button" class="btn btn-sm remove-row" id="bin"><i class="fa-solid fa-trash-can"></i></button></td>
                             </tr>
                         {% endfor %}
@@ -114,7 +114,7 @@
                                     <option value="">Select ICT Equipment or Type</option>
                                     {% set ict_equipment = [
                                         'Monitor', 'CPU', 'Laptops', 'Printers', 'Photocopiers',
-                                        'Scanners', 'Routers', 'switches', 'access points', 'Projector'
+                                        'Scanners', 'Routers', 'switches', 'access points', 'Projector', 'UPS'
                                     ] %}
                                     {% for equip in ict_equipment %}
                                         <option value="{{ equip }}">{{ equip }}</option>
@@ -154,6 +154,10 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    // Debug edit_data safely
+    const editData = {{ edit_data|tojson|safe if edit_data is defined else '{}' }};
+    console.log('Edit data:', editData);
+
     function toggleCustomDeptSchool(select) {
         const customInput = $('#customDepartmentSchool');
         if (select.value === 'custom') {
@@ -183,7 +187,7 @@
     }
 
     $(document).ready(function() {
-        let rowCount = {{ edit_data.rows|length if edit_data else 1 }};
+        let rowCount = {{ edit_data.rows|length if edit_data and edit_data.rows else 1 }};
 
         $('#addRow').click(function() {
             rowCount++;
@@ -197,7 +201,7 @@
                             <option value="">Select ICT Equipment or Type</option>
                             {% set ict_equipment = [
                                 'Monitor', 'CPU', 'Laptops', 'Printers', 'Photocopiers',
-                                'Scanners', 'Routers', 'switches', 'access points', 'Projector'
+                                'Scanners', 'Routers', 'switches', 'access points', 'Projector', 'UPS'
                             ] %}
                             {% for equip in ict_equipment %}
                                 <option value="{{ equip }}">{{ equip }}</option>
@@ -250,7 +254,10 @@
                     $.ajax({
                         url: '/check_serial_number',
                         type: 'POST',
-                        data: { serial_number: serialNumber },
+                        data: { 
+                            serial_number: serialNumber,
+                            edit_id: '{{ edit_data._id if edit_data else "" }}'
+                        },
                         success: function(response) {
                             $input.next('.valid-feedback, .invalid-feedback').remove();
                             if (response.exists) {
@@ -284,8 +291,8 @@
                     username: $(`input[name="username${rowNum}"]`).val() || '',
                     position: $(`input[name="position${rowNum}"]`).val() || '',
                     ict_equipment: $(`select[name="ict_equipment${rowNum}"]`).val() === 'custom' ? $(`input[name="custom_ict_equipment${rowNum}"]`).val() || '' : $(`select[name="ict_equipment${rowNum}"]`).val() || '',
-                    model_details: $(`input[name="model_details${rowNum}"]`).val() || '',
-                    serial_number: $(`input[name="serial_number${rowNum}"]`).val() || '',
+                    model_details: $(`input[name="model_details${rowNum}"]`).val() || 'N/A',
+                    serial_number: $(`input[name="serial_number${rowNum}"]`).val() || 'N/A',
                     status: $(`select[name="status${rowNum}"]`).val() || '',
                     comment: $(`input[name="comment${rowNum}"]`).val() || ''
                 };
@@ -310,13 +317,14 @@
             }
             inventoryData.forEach((row, index) => {
                 const rowNum = index + 1;
-                if (!row.username.trim() || !row.ict_equipment.trim() || !row.serial_number.trim() || !row.status.trim()) {
-                    alert(`Please fill in all required fields (Username, ICT Equipment, Serial Number, Status) for row ${rowNum}.`);
+                if (!row.username.trim() || !row.ict_equipment.trim() || !row.status.trim()) {
+                    alert(`Please fill in all required fields (Username, ICT Equipment, Status) for row ${rowNum}.`);
                     isValid = false;
                     return false;
                 }
             });
             if (isValid) {
+                console.log('Submitting form with inventoryData:', $('#inventoryData').val());
                 this.submit();
             }
         });
@@ -333,8 +341,8 @@
                     $(`input[name="username${rowNum}"]`).val() || '',
                     $(`input[name="position${rowNum}"]`).val() || '',
                     $(`select[name="ict_equipment${rowNum}"]`).val() === 'custom' ? $(`input[name="custom_ict_equipment${rowNum}"]`).val() : $(`select[name="ict_equipment${rowNum}"]`).val() || '',
-                    $(`input[name="model_details${rowNum}"]`).val() || '',
-                    $(`input[name="serial_number${rowNum}"]`).val() || '',
+                    $(`input[name="model_details${rowNum}"]`).val() || 'N/A',
+                    $(`input[name="serial_number${rowNum}"]`).val() || 'N/A',
                     $(`select[name="status${rowNum}"]`).val() || '',
                     $(`input[name="comment${rowNum}"]`).val() || ''
                 ];
