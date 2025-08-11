@@ -8,7 +8,7 @@ class RegistrationForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     fname = StringField('First Name', validators=[DataRequired()])
     lname = StringField('Last Name', validators=[DataRequired()])
-    role = SelectField('Role', choices=[('','Select a role'),('normal', 'Normal User'), ('admin', 'Stuff')])
+    role = SelectField('Role', choices=[('','Select a role'),('normal', 'Normal'), ('admin', 'Staff')])
     phone_number = StringField('Phone Number', validators=[DataRequired(), Length(min=9, max=13)])
     student_number = StringField('Student Number')
     password = PasswordField('Password', validators=[DataRequired(), Length(min=4)])

@@ -51,7 +51,11 @@ if not user_collection.find_one({'email': default_email}):
     })
     logger.info(f"Default admin created: {default_email}")
 
-from app.routes import home, inventory, default_inventory, recent, registration, login, my_files, stats, view_stats, manage_user, tutorials
+from app.routes import (
+    home, inventory, default_inventory, recent, registration, login, my_files, stats, view_stats, manage_user, tutorials,
+    client
+
+    ) 
 app.register_blueprint(home.bp)
 app.register_blueprint(inventory.bp)
 app.register_blueprint(default_inventory.bp)
@@ -63,3 +67,4 @@ app.register_blueprint(stats.bp)
 app.register_blueprint(view_stats.bp)
 app.register_blueprint(manage_user.bp)
 app.register_blueprint(tutorials.bp)
+app.register_blueprint(client.bp)

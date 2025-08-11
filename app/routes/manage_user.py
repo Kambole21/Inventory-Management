@@ -55,10 +55,11 @@ def manage():
                         pending_users.delete_one({'_id': ObjectId(user_id)})
                         logger.debug(f"User {user['email']} approved, moved to user_collection with new _id: {result.inserted_id}")
                         try:
+                            login_url = url_for('login.log', _external = True)
                             send_email(
                                 user['email'], 
                                 'Account Approved', 
-                                'Your account has been approved. You can now log in.'
+                                f'Your account has been approved. You can now log in. Click on the link to login {login_url}'
                             )
                             flash(f'User {user["email"]} approved successfully.', 'success')
                         except Exception as e:
