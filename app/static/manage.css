@@ -52,7 +52,7 @@
 }
 
 .btn-success {
-    color: #fff; /* White for better contrast */
+    color: seagreen; /* White for better contrast */
     background-color: #28a745;
     border-color: #28a745;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
@@ -62,11 +62,11 @@
     background-color: #218838;
     border-color: #1e7e34;
     box-shadow: 0 0 10px rgba(40, 167, 69, 0.4);
-    color: #fff;
+    color: seagreen;
 }
 
 .btn-danger {
-    color: #fff; /* White for better contrast */
+    color: #ff011a; /* White for better contrast */
     background-color: #dc3545;
     border-color: #dc3545;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
@@ -76,7 +76,7 @@
     background-color: #c82333;
     border-color: #bd2130;
     box-shadow: 0 0 10px rgba(220, 53, 69, 0.4);
-    color: #fff;
+    color: #dc3545;
 }
 
 .text-center {

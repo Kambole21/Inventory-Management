@@ -19,7 +19,7 @@
     <h2 class="mt-4 text-purple border-bottom">User Management 🧑‍💻</h2>
     
     <div class="mb-3">
-        <label for="viewTypeSelect" class="form-label">View:</label>
+        <label for="viewTypeSelect" class="form-label text-purple">View:</label>
         <select id="viewTypeSelect" class="form-select w-auto d-inline-block" onchange="window.location.href='{{ url_for('manage_user.manage') }}?view_type=' + this.value;">
             <option value="pending" {% if view_type == 'pending' %}selected{% endif %}>Pending Requests</option>
             <option value="approved" {% if view_type == 'approved' %}selected{% endif %}>Manage Users</option>
