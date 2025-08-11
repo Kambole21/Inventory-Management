@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, request, url_for, jsonify, flash, 
 from app.forms import RegistrationForm
 from werkzeug.security import generate_password_hash
 import logging
-from app.routes.login import login_required
 
 bp = Blueprint('registration', __name__)
 
@@ -10,7 +9,6 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 @bp.route('/Register_Page', methods=['GET', 'POST'])
-@login_required
 def reg():
     from app import db, pending_users  
     form = RegistrationForm()
