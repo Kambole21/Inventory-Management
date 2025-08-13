@@ -43,8 +43,16 @@
                 {% if pending_users %}
                     {% for user in pending_users %}
                         <tr>
-                            <td class="email-col">{{ user.email }}</td>
-                            <td class="name-col">{{ user.fname }} {{ user.lname }}</td>
+                            <td class="email-col">
+                                <a href="{{ url_for('manage_user.edit_user', user_id=user._id) }}" class="text-decoration-none">
+                                    {{ user.email }}
+                                </a>
+                            </td>
+                            <td class="name-col">
+                                <a href="{{ url_for('manage_user.edit_user', user_id=user._id) }}" class="text-decoration-none">
+                                    {{ user.fname }} {{ user.lname }}
+                                </a>
+                            </td>
                             <td>{{ user.role }}</td>
                             <td class="hide-mobile">{{ user.phone_number }}</td>
                             <td class="hide-mobile">{{ user.student_number if user.student_number else 'N/A' }}</td>
@@ -76,7 +84,7 @@
                                             <select name="action" class="form-select form-select-sm d-inline-block w-auto" onchange="this.form.submit();">
                                                 <option value="" selected disabled>Change Role</option>
                                                 <option value="role_admin">Admin</option>
-                                                <option value="role_user">User</option>
+                                                <option value="role_normal">Normal</option>
                                             </select>
                                         </form>
                                     {% endif %}
@@ -104,6 +112,20 @@
             const formData = $(this).serialize();
             console.log('Form data:', formData);
         });
+ $(document).ready(function() {
+        // Make entire row clickable (except action buttons)
+        $('tbody tr').on('click', function(e) {
+            // Don't trigger if clicking on a button, select, or form element
+            if (!$(e.target).is('button') && 
+                !$(e.target).is('select') && 
+                !$(e.target).is('input') && 
+                !$(e.target).closest('.action-buttons').length) {
+                const userId = $(this).find('input[name="user_id"]').val();
+                if (userId){
+                    window.location.href = "{{ url_for('manage_user.edit_user', user_id='USER_ID_PLACEHOLDER') }}".replace('USER_ID_PLACEHOLDER', userId);
+                }
+            }
+        }).css('cursor', 'pointer');
     });
 </script>
 {% endblock %}

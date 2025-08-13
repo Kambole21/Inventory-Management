@@ -3,6 +3,7 @@ from wtforms import StringField, PasswordField, SelectField, SubmitField
 from wtforms.validators import DataRequired, Length, EqualTo, Email, ValidationError
 from flask import Flask
 from app import db  
+from bson.objectid import ObjectId
 
 class RegistrationForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -37,3 +38,26 @@ class ResetPassword(FlaskForm):
 class ResetEmail(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Send Email')
+
+class EditUserForm(FlaskForm):
+    fname = StringField('First Name', validators=[DataRequired()])
+    lname = StringField('Last Name', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    phone_number = StringField('Phone Number', validators=[DataRequired(), Length(min=9, max=13)])
+    student_number = StringField('Student Number')
+    role = SelectField('Role', choices=[('normal', 'Normal'), ('admin', 'Admin')], validators=[DataRequired()])
+    submit = SubmitField('Save Changes')
+
+    def __init__(self, original_email, user_id, *args, **kwargs):
+        super(EditUserForm, self).__init__(*args, **kwargs)
+        self.original_email = original_email
+        self.user_id = user_id
+
+    def validate_email(self, field):
+        if field.data != self.original_email:
+            if db.user_collection.find_one({'email': field.data, '_id': {'$ne': ObjectId(self.user_id)}}):
+                raise ValidationError('This email is already registered.')
+
+    def validate_student_number(self, field):
+        if self.role.data == 'normal' and not field.data:
+            raise ValidationError('Student number is required for Normal User.')

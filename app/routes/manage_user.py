@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, url_for, flash, redirect,
 from app import db, user_collection, pending_users, mail
 from flask_mail import Message
 from bson.objectid import ObjectId
+from app.forms import EditUserForm
 import logging
 from app.routes.login import login_required
 
@@ -18,7 +19,7 @@ def manage():
     if user_id:
         user_data = user_collection.find_one({'_id': ObjectId(user_id)})
     
-    # Get view_type from query parameter or formwardenform (default to 'pending')
+    # Get view_type from query parameter or form (default to 'pending')
     view_type = request.args.get('view_type', 'pending')
     
     # Fetch users based on view_type
@@ -133,6 +134,60 @@ def manage():
         return redirect(url_for('manage_user.manage', view_type=view_type))
     
     return render_template('manage_user.html', pending_users=users, view_type=view_type, user_data=user_data)
+
+@bp.route('/edit_user/<user_id>', methods=['GET', 'POST'])
+@login_required
+def edit_user(user_id):
+    # Get current user from session
+    current_user_id = session.get('user_id')
+    current_user = user_collection.find_one({'_id': ObjectId(current_user_id)})
+    
+    # Check if current user is admin
+    if not current_user or current_user.get('role') != 'admin':
+        flash('You do not have permission to edit users.', 'error')
+        return redirect(url_for('manage_user.manage'))
+    
+    # Get the user to be edited
+    user_to_edit = user_collection.find_one({'_id': ObjectId(user_id)})
+    if not user_to_edit:
+        flash('User not found.', 'error')
+        return redirect(url_for('manage_user.manage'))
+    
+    # Fetch user_data for the current user (for template rendering)
+    user_data = user_collection.find_one({'_id': ObjectId(current_user_id)})
+    form = EditUserForm(original_email=user_to_edit['email'], user_id=user_id, obj=user_to_edit)
+    
+    if form.validate_on_submit():
+        try:
+            updates = {
+                'fname': form.fname.data,
+                'lname': form.lname.data,
+                'email': form.email.data,
+                'phone_number': form.phone_number.data,
+                'student_number': form.student_number.data,
+                'role': form.role.data
+            }
+            
+            result = user_collection.update_one(
+                {'_id': ObjectId(user_id)},
+                {'$set': updates}
+            )
+            
+            if result.modified_count > 0:
+                flash('User updated successfully!', 'success')
+                return redirect(url_for('manage_user.manage', view_type='approved'))
+            else:
+                flash('No changes were made.', 'info')
+        except Exception as e:
+            logger.error(f"Error updating user: {str(e)}")
+            flash('An error occurred while updating the user.', 'error')
+    
+    # Pass both current_user and user_to_edit to template for clarity
+    return render_template('edit_user.html', 
+                         user=user_to_edit,
+                         current_user=current_user, 
+                         user_data=user_data,
+                         form=form)
 
 def send_email(recipient, subject, body):
     msg = Message(subject, recipients=[recipient], body=body)

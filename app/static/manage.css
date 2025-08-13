@@ -157,3 +157,13 @@
         font-size: 0.65rem;
     }
 }
+/* Add to manage.css */
+a.text-decoration-none {
+    color: inherit;
+    transition: color 0.2s;
+}
+
+a.text-decoration-none:hover {
+    color: var(--dark-purple);
+    text-decoration: none;
+}

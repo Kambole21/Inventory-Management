@@ -1,0 +1,48 @@
+.edit-form {
+    background-color: #f8f9fa;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.edit-form label {
+    font-weight: 500;
+    color: var(--dark-purple);
+}
+
+.edit-form .form-control,
+.edit-form .form-select {
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    padding: 0.5rem 0.75rem;
+}
+
+.edit-form .form-control:focus,
+.edit-form .form-select:focus {
+    border-color: var(--dark-purple);
+    box-shadow: 0 0 0 0.25rem rgba(103, 58, 183, 0.25);
+}
+
+.btn-primary {
+    background-color: var(--dark-purple);
+    border-color: var(--dark-purple);
+}
+
+.btn-primary:hover {
+    background-color: #5e35b1;
+    border-color: #5e35b1;
+}
+
+@media (max-width: 767.98px) {
+    .edit-form {
+        padding: 1rem;
+    }
+    
+    .edit-form .row {
+        margin-bottom: 0.5rem;
+    }
+    
+    .edit-form .mb-3 {
+        margin-bottom: 1rem !important;
+    }
+}
